@@ -4,7 +4,7 @@ public class Domino {
 
     public Domino(int leftNum, int rightNum) {
         this.leftNum = leftNum;
-        this. rightNum = rightNum;
+        this.rightNum = rightNum;
     }
 
     public int getLeftNum() {
