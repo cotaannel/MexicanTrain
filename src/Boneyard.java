@@ -8,6 +8,7 @@ public class Boneyard {
     public Boneyard() {
         boneyard = new ArrayList<Domino>();
         createBoneyard();
+        printBoneyard();
     }
 
     public void createBoneyard() {
@@ -19,6 +20,13 @@ public class Boneyard {
             }
         }
         Collections.shuffle(boneyard);
+    }
+
+    public void printBoneyard() {
+        for(int i = 0; i < boneyard.size(); i++) {
+            System.out.println(boneyard.get(i).toString() + " " );
+
+        }
     }
 
 

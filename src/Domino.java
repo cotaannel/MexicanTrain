@@ -14,4 +14,8 @@ public class Domino {
     public int getRightNum() {
         return rightNum;
     }
+
+    public String toString() {
+        return "[" + leftNum + "|" + rightNum + "]";
+    }
 }
