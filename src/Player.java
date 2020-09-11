@@ -33,5 +33,9 @@ public class Player {
         hand.remove(dom);
     }
 
-
+    public void createHand(Boneyard by) {
+        for (int i = 0; i < startingDomNum; i++) {
+            this.addDomToHand(by.drawDom());
+        }
+    }
 }

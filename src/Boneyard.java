@@ -23,6 +23,16 @@ public class Boneyard {
         Collections.shuffle(boneyard);
     }
 
+    public int getSize() {
+        return boneyard.size();
+    }
+
+    public Domino drawDom() {
+        Domino dom = boneyard.get(0);
+        boneyard.remove(0);
+        return dom;
+    }
+
     public void printBoneyard() {
         for(int i = 0; i < boneyard.size(); i++) {
             System.out.println(boneyard.get(i).toString());
