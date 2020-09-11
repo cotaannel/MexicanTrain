@@ -13,6 +13,11 @@ public class Player {
         hand = new ArrayList<Domino>();
     }
 
+    public Player() {
+        this.playerNum = playerNum;
+        hand = new ArrayList<Domino>();
+    }
+
     public ArrayList<Domino> getHand() {
         return hand;
     }
@@ -36,6 +41,12 @@ public class Player {
     public void createHand(Boneyard by) {
         for (int i = 0; i < startingDomNum; i++) {
             this.addDomToHand(by.drawDom());
+        }
+    }
+
+    public void printHand() {
+        for(int i = 0; i < hand.size(); i++) {
+            System.out.print(hand.get(i).toString() + "," );
         }
     }
 }

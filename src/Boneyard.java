@@ -8,7 +8,6 @@ public class Boneyard {
     public Boneyard() {
         boneyard = new ArrayList<Domino>();
         createBoneyard();
-        printBoneyard();
     }
 
     public void createBoneyard() {
@@ -39,6 +38,5 @@ public class Boneyard {
         }
         System.out.println(boneyard.size());
     }
-
 
 }
