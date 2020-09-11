@@ -15,6 +15,7 @@ public class Domino {
         return rightNum;
     }
 
+    //print dominos in form [0|0]
     public String toString() {
         return "[" + leftNum + "|" + rightNum + "]";
     }
