@@ -4,14 +4,15 @@ import java.util.ArrayList;
 public class Player {
     private String playerNum;
     private ArrayList<Domino> hand;
+    private boolean trainState = false;
 
     //for testing
     private int startingDomNum = 5;
 
-    public Player(String playerNum) {
-        this.playerNum = playerNum;
-        hand = new ArrayList<Domino>();
-    }
+//    public Player(String playerNum) {
+//        this.playerNum = playerNum;
+//        hand = new ArrayList<Domino>();
+//    }
 
     public Player() {
         this.playerNum = playerNum;
@@ -28,6 +29,10 @@ public class Player {
 
     public int getHandSize() {
         return hand.size();
+    }
+
+    public boolean getTrainState() {
+        return trainState;
     }
 
     public void addDomToHand(Domino dom) {
