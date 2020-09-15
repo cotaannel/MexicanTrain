@@ -1,27 +1,33 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Player {
     private String playerNum;
+    private int playerNumInc = 1;
     private ArrayList<Domino> hand;
     private boolean trainState = false;
 
     //for testing
     private int startingDomNum = 5;
 
-//    public Player(String playerNum) {
-//        this.playerNum = playerNum;
-//        hand = new ArrayList<Domino>();
-//    }
-
-    public Player() {
+    public Player(String playerNum) {
         this.playerNum = playerNum;
         hand = new ArrayList<Domino>();
+        //createHand(by);
+    }
+
+    public Player() {
+        hand = new ArrayList<Domino>();
+        playerNum = "player" + playerNumInc;
+    }
+
+    public int changeIncrement() {
+        return playerNumInc++;
     }
 
     public ArrayList<Domino> getHand() {
         return hand;
     }
+
 
     public String getPlayerNum() {
         return playerNum;
@@ -50,8 +56,10 @@ public class Player {
     }
 
     public void printHand() {
+        System.out.println(getPlayerNum());
         for(int i = 0; i < hand.size(); i++) {
-            System.out.print(hand.get(i).toString() + "," );
+            System.out.print(hand.get(i).toString() + " " );
         }
+        System.out.println();
     }
 }
