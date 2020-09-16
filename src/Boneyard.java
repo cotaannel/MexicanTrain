@@ -36,7 +36,7 @@ public class Boneyard {
         for(int i = 0; i < boneyard.size(); i++) {
             System.out.print(boneyard.get(i).toString() + " ");
         }
-        System.out.println(boneyard.size());
+        System.out.println();
     }
 
 }

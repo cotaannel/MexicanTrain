@@ -5,13 +5,12 @@ public class Player {
     //private int playerNumInc = 1;
     private ArrayList<Domino> hand;
     private boolean trainState = false;
+    private int startingDomNum;
 
-    //for testing
-    private int startingDomNum = 9;
-
-    public Player(String playerNum) {
+    public Player(String playerNum, int i) {
         this.playerNum = playerNum;
         hand = new ArrayList<Domino>();
+        startingDomNum = i;
         //createHand(by);
     }
 
@@ -19,10 +18,6 @@ public class Player {
         hand = new ArrayList<Domino>();
         //playerNum = "Player" + playerNumInc;
     }
-
-//    public int changeIncrement() {
-//        return playerNumInc++;
-//    }
 
     public ArrayList<Domino> getHand() {
         return hand;
