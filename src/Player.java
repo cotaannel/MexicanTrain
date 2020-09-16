@@ -4,18 +4,21 @@ public class Player {
     private String playerNum;
     //private int playerNumInc = 1;
     private ArrayList<Domino> hand;
+    private ArrayList<Domino> train;
     private boolean trainState = false;
     private int startingDomNum;
 
     public Player(String playerNum, int i) {
         this.playerNum = playerNum;
         hand = new ArrayList<Domino>();
+        train = new ArrayList<Domino>();
         startingDomNum = i;
         //createHand(by);
     }
 
     public Player() {
         hand = new ArrayList<Domino>();
+        train = new ArrayList<Domino>();
         //playerNum = "Player" + playerNumInc;
     }
 
@@ -23,6 +26,9 @@ public class Player {
         return hand;
     }
 
+    public void addDomToTrain(Domino dom) {
+        train.add(dom);
+    }
 
     public String getPlayerNum() {
         return playerNum;
@@ -56,5 +62,12 @@ public class Player {
             System.out.print(hand.get(i).toString() + " " );
         }
         System.out.println();
+    }
+    public void printTrain() {
+        System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
+//        for(int i = 0; i < train.size(); i++) {
+//            System.out.print(train.get(i).toString() + " " );
+//        }
+//        System.out.println();
     }
 }
