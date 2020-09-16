@@ -14,13 +14,11 @@ public class Player {
         hand = new ArrayList<Domino>();
         train = new ArrayList<Domino>();
         startingDomNum = i;
-        //createHand(by);
     }
 
     public Player() {
         hand = new ArrayList<Domino>();
         train = new ArrayList<Domino>();
-        //playerNum = "Player" + playerNumInc;
     }
 
     public void makePlayerTurn() {

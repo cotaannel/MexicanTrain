@@ -5,7 +5,6 @@ public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private Board brd;
-    int playerTurnInc = 0;
 
     public GameManager() {
         boneyard = new Boneyard();
@@ -51,8 +50,6 @@ public class GameManager {
         printGameState();
     }
 
-
-
     public void printGameState() {
         System.out.println("GameState:");
         System.out.println("Humans:");
@@ -61,13 +58,16 @@ public class GameManager {
                 p.printHand();
             }
         }
+        System.out.println();
         System.out.println("Computers:");
         for(Player p : players){
             if(p.checkIfComputer()) {
                 p.printHand();
             }
         }
+        System.out.println();
         System.out.println("Center:");
+        System.out.println(brd.getCenter());
         System.out.println("Board:");
         brd.printBoard();
         System.out.println("Boneyard:");
@@ -78,7 +78,7 @@ public class GameManager {
                 System.out.print(p.getPlayerNum());
             }
         }
-
+        System.out.println();
 
     }
 }
