@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class GameManager {
     private Boneyard boneyard;
-    private ArrayList<Player> humPlayers;
-    private ArrayList<Player> comPlayers;
+    private ArrayList<Player> players;
     private Board brd;
+    int playerTurnInc = 0;
 
     public GameManager() {
         boneyard = new Boneyard();
@@ -14,8 +14,7 @@ public class GameManager {
 
     public void startGame() {
         Scanner in = new Scanner(System.in);
-        humPlayers = new ArrayList<>();
-        comPlayers = new ArrayList<>();
+        players = new ArrayList<>();
         int totalStartingDom = 0;
 
         System.out.println("Welcome to Mexican Train!");
@@ -36,7 +35,7 @@ public class GameManager {
         for (int i = 1; i <= numHumanPlayers; i++) {
             Player p = new Player("Player" + i, totalStartingDom);
             p.createHand(boneyard);
-            humPlayers.add(p);
+            players.add(p);
         }
 
         System.out.println("Please enter the number of computer players:");
@@ -44,22 +43,27 @@ public class GameManager {
         for (int i = 1; i <= numComPlayers; i++) {
             Player p = new Player("Computer" + i, totalStartingDom);
             p.createHand(boneyard);
-            comPlayers.add(p);
+            p.setComputer();
+            players.add(p);
         }
         in.close();
-        brd = new Board(humPlayers,comPlayers);
+        brd = new Board(players);
         printGameState();
     }
 
     public void printGameState() {
         System.out.println("GameState:");
         System.out.println("Humans:");
-        for(Player p : humPlayers){
-            p.printHand();
+        for(Player p : players){
+            if(!p.checkIfComputer()) {
+                p.printHand();
+            }
         }
         System.out.println("Computers:");
-        for(Player p : comPlayers){
-            p.printHand();
+        for(Player p : players){
+            if(p.checkIfComputer()) {
+                p.printHand();
+            }
         }
         System.out.println("Center:");
         System.out.println("Board:");
@@ -67,6 +71,7 @@ public class GameManager {
         System.out.println("Boneyard:");
         boneyard.printBoneyard();
         System.out.println("Current player:");
+
 
     }
 }

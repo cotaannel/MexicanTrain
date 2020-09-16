@@ -6,6 +6,7 @@ public class Player {
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
     private boolean trainState = false;
+    private boolean isComputer = false;
     private int startingDomNum;
 
     public Player(String playerNum, int i) {
@@ -20,6 +21,14 @@ public class Player {
         hand = new ArrayList<Domino>();
         train = new ArrayList<Domino>();
         //playerNum = "Player" + playerNumInc;
+    }
+
+    public void setComputer() {
+        isComputer = true;
+    }
+
+    public boolean checkIfComputer() {
+        return isComputer;
     }
 
     public ArrayList<Domino> getHand() {
