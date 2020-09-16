@@ -15,6 +15,12 @@ public class Domino {
         return rightNum;
     }
 
+    public void rotateTile() {
+        int firstNum = this.leftNum;
+        this.leftNum = rightNum;
+        this.rightNum = firstNum;
+    }
+
     //print dominos in form [0|0]
     public String toString() {
         return "[" + leftNum + "|" + rightNum + "]";
