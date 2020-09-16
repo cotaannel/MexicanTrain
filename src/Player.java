@@ -41,6 +41,9 @@ public class Player {
     public boolean getTrainState() {
         return trainState;
     }
+    public void setTrainState() {
+        trainState = true;
+    }
 
     public void addDomToHand(Domino dom) {
         hand.add(dom);

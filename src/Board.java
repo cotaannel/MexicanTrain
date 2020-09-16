@@ -9,12 +9,13 @@ public class Board {
     public Board(ArrayList<Player> humPlayers, ArrayList<Player> comPlayers) {
         this.humPlayers = humPlayers;
         this.comPlayers = comPlayers;
+        mexTrain = new Player("Mexican Train",0);
+        mexTrain.setTrainState();
         //printBoard();
     }
 
     public void printBoard() {
-//        System.out.print("Mexican train(true):");
-//        mexTrain.
+        mexTrain.printTrain();
         for(Player p : humPlayers ){
             p.printTrain();
         }
