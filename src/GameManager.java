@@ -51,6 +51,8 @@ public class GameManager {
         printGameState();
     }
 
+
+
     public void printGameState() {
         System.out.println("GameState:");
         System.out.println("Humans:");
@@ -71,6 +73,11 @@ public class GameManager {
         System.out.println("Boneyard:");
         boneyard.printBoneyard();
         System.out.println("Current player:");
+        for(Player p : players){
+            if(p.getPlayerTurn()) {
+                System.out.print(p.getPlayerNum());
+            }
+        }
 
 
     }

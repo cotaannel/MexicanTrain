@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public class Player {
     private String playerNum;
-    //private int playerNumInc = 1;
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
     private boolean trainState = false;
     private boolean isComputer = false;
+    private boolean playerTurn = false;
     private int startingDomNum;
 
     public Player(String playerNum, int i) {
@@ -21,6 +21,17 @@ public class Player {
         hand = new ArrayList<Domino>();
         train = new ArrayList<Domino>();
         //playerNum = "Player" + playerNumInc;
+    }
+
+    public void makePlayerTurn() {
+        playerTurn = true;
+    }
+    public void makePlayerTurnFalse() {
+        playerTurn = false;
+    }
+
+    public boolean getPlayerTurn() {
+        return playerTurn;
     }
 
     public void setComputer() {
