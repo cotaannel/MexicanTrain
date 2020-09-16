@@ -3,7 +3,8 @@ import java.util.Scanner;
 
 public class GameManager {
     private Boneyard boneyard;
-    private ArrayList<Player> players;
+    private ArrayList<Player> humPlayers;
+    private ArrayList<Player> comPlayers;
     private Player player1;
     private Player player2;
     private Player player3;
@@ -22,7 +23,8 @@ public class GameManager {
 
     public void startGame() {
         Scanner in = new Scanner(System.in);
-        players = new ArrayList<>();
+        humPlayers = new ArrayList<>();
+        comPlayers = new ArrayList<>();
 
         System.out.println("Welcome to Mexican Train!");
         System.out.println("Up to 4 players can play with any mix of human and computer players.");
@@ -31,7 +33,7 @@ public class GameManager {
         for (int i = 1; i <= numHumanPlayers; i++) {
             Player p = new Player("player" + i);
             p.createHand(boneyard);
-            players.add(p);
+            humPlayers.add(p);
             p.printHand();
         }
 
@@ -40,7 +42,7 @@ public class GameManager {
         for (int i = 1; i <= numComPlayers; i++) {
             Player p = new Player("computer" + i);
             p.createHand(boneyard);
-            players.add(p);
+            comPlayers.add(p);
             p.printHand();
         }
 
@@ -49,6 +51,7 @@ public class GameManager {
     public void printGameState() {
         System.out.println("GameState:");
         System.out.println("Humans:");
+        System.out.println();
         System.out.println("Computers:");
         System.out.println("Center:");
         System.out.println("Board:");
