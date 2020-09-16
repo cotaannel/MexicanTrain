@@ -31,28 +31,35 @@ public class GameManager {
         System.out.println("Please enter the number of human players:");
         int numHumanPlayers = in.nextInt();
         for (int i = 1; i <= numHumanPlayers; i++) {
-            Player p = new Player("player" + i);
+            Player p = new Player("Player" + i);
             p.createHand(boneyard);
             humPlayers.add(p);
-            p.printHand();
+            //p.printHand();
         }
 
         System.out.println("Please enter the number of computer players:");
         int numComPlayers = in.nextInt();
         for (int i = 1; i <= numComPlayers; i++) {
-            Player p = new Player("computer" + i);
+            Player p = new Player("Computer" + i);
             p.createHand(boneyard);
             comPlayers.add(p);
-            p.printHand();
+            //p.printHand();
         }
-
+        printGameState();
     }
 
     public void printGameState() {
         System.out.println("GameState:");
         System.out.println("Humans:");
-        System.out.println();
+        for( Player p : humPlayers ){
+            //System.out.println(p.getPlayerNum() + ": ");
+            p.printHand();
+        }
         System.out.println("Computers:");
+        for( Player p : comPlayers ){
+            //System.out.println(p.getPlayerNum() + ": ");
+            p.printHand();
+        }
         System.out.println("Center:");
         System.out.println("Board:");
         System.out.println("Boneyard:");

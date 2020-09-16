@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Player {
     private String playerNum;
-    private int playerNumInc = 1;
+    //private int playerNumInc = 1;
     private ArrayList<Domino> hand;
     private boolean trainState = false;
 
     //for testing
-    private int startingDomNum = 5;
+    private int startingDomNum = 9;
 
     public Player(String playerNum) {
         this.playerNum = playerNum;
@@ -17,12 +17,12 @@ public class Player {
 
     public Player() {
         hand = new ArrayList<Domino>();
-        playerNum = "player" + playerNumInc;
+        //playerNum = "Player" + playerNumInc;
     }
 
-    public int changeIncrement() {
-        return playerNumInc++;
-    }
+//    public int changeIncrement() {
+//        return playerNumInc++;
+//    }
 
     public ArrayList<Domino> getHand() {
         return hand;
@@ -56,7 +56,7 @@ public class Player {
     }
 
     public void printHand() {
-        System.out.println(getPlayerNum());
+        System.out.println(getPlayerNum() + ": ");
         for(int i = 0; i < hand.size(); i++) {
             System.out.print(hand.get(i).toString() + " " );
         }
