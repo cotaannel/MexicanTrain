@@ -10,16 +10,15 @@ public class Board {
         this.humPlayers = humPlayers;
         this.comPlayers = comPlayers;
         mexTrain = new Player("Mexican Train",0);
-        mexTrain.setTrainState();
-        //printBoard();
+        mexTrain.makeStateTrue();
     }
 
     public void printBoard() {
         mexTrain.printTrain();
-        for(Player p : humPlayers ){
+        for(Player p : humPlayers){
             p.printTrain();
         }
-        for(Player p : comPlayers ){
+        for(Player p : comPlayers){
             p.printTrain();
         }
     }

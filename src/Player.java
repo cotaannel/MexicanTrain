@@ -41,8 +41,12 @@ public class Player {
     public boolean getTrainState() {
         return trainState;
     }
-    public void setTrainState() {
+    public void makeStateTrue() {
         trainState = true;
+    }
+
+    public void makeStateFalse() {
+        trainState = false;
     }
 
     public void addDomToHand(Domino dom) {
@@ -68,9 +72,9 @@ public class Player {
     }
     public void printTrain() {
         System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
-//        for(int i = 0; i < train.size(); i++) {
-//            System.out.print(train.get(i).toString() + " " );
-//        }
-//        System.out.println();
+        for(int i = 0; i < train.size(); i++) {
+            System.out.print(train.get(i).toString() + " " );
+        }
+        System.out.println();
     }
 }
