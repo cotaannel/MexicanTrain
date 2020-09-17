@@ -1,14 +1,48 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private Board brd;
+    private Player currentPlayer = new Player();
+    private Scanner in = new Scanner(System.in);
 
     public GameManager() {
         boneyard = new Boneyard();
         startGame();
+        startTurn();
+
+        in.close();
+    }
+
+    public void startTurn() {
+        for(Player p : players){
+            if(p.getPlayerTurn()) {
+                currentPlayer = p;
+            }
+        }
+        System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
+        System.out.println("[p] play domino");
+        System.out.println("[d] draw from boneyard");
+        System.out.println("[q] quit");
+        String playerOption = in.nextLine();
+        switch (playerOption) {
+            case "p":
+                System.out.println("Which domino?");
+                //String playerChoice = in.nextLine();
+                break;
+            case "d":
+                currentPlayer.addDomToHand(boneyard.drawDom());
+                System.out.println("Domino was drawn.");
+                break;
+            case "q":
+                exit(0);
+        }
+        printGameState();
+
     }
 
     public void startGame() {
@@ -20,7 +54,7 @@ public class GameManager {
         System.out.println("Up to 4 players can play with any mix of human and computer players.");
         System.out.println("Please enter the TOTAL number of players:");
         int totalPlayers = in.nextInt();
-        //changes starting number of dominos depending on number of players
+        //changes starting number of dominoes depending on number of players
         if (totalPlayers == 4) {
             totalStartingDom = 10;
         } else if(totalPlayers == 3) {
@@ -45,7 +79,6 @@ public class GameManager {
             p.setComputer();
             players.add(p);
         }
-        in.close();
         brd = new Board(players);
         printGameState();
     }
@@ -75,10 +108,9 @@ public class GameManager {
         System.out.println("Current player:");
         for(Player p : players){
             if(p.getPlayerTurn()) {
-                System.out.print(p.getPlayerNum());
+                System.out.println(p.getPlayerNum());
             }
         }
-        System.out.println();
-
+        System.out.println("------------------------------------");
     }
 }
