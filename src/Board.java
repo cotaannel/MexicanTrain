@@ -6,12 +6,10 @@ public class Board {
     private Player mexTrain;
     private int playerTurnInc = 0;
     private Domino center;
-    private int left = 9;
-    private int right = 9;
 
-    public Board(ArrayList<Player> players) {
+    public Board(ArrayList<Player> players, int n) {
         this.players = players;
-        center = new Domino(left,right);
+        center = new Domino(n,n);
         mexTrain = new Player("Mexican Train",0);
         mexTrain.makeStateTrue();
         changePlayerTurn();

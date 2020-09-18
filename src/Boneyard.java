@@ -4,6 +4,7 @@ import java.util.Collections;
 
 public class Boneyard {
     public ArrayList<Domino> boneyard;
+    public int centerNum = 9;
 
     public Boneyard() {
         boneyard = new ArrayList<Domino>();
@@ -12,10 +13,18 @@ public class Boneyard {
 
     public void createBoneyard() {
         for(int i = 0; i <= 9; i++) {
-            int j = i;
-            while (j >= 0) {
-                boneyard.add(new Domino(i,j));
-                j--;
+            int j = 0;
+            while (j <= 9) {
+                boneyard.add(new Domino(j,i));
+                j++;
+            }
+        }
+        //removes the center domino from boneyard
+        Domino dom = new Domino(centerNum,centerNum);
+        for(int i = 0; i < boneyard.size(); i++) {
+            Domino test = boneyard.get(i);
+            if(test.getLeftNum() == dom.getLeftNum() && test.getRightNum() == test.getRightNum()) {
+                boneyard.remove(i);
             }
         }
         //shuffles dominos

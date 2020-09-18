@@ -12,6 +12,7 @@ public class GameManager {
 
     public GameManager() {
         boneyard = new Boneyard();
+        //boneyard.printBoneyard();
         startGame();
         startTurn();
 
@@ -32,7 +33,8 @@ public class GameManager {
         switch (playerOption) {
             case "p":
                 System.out.println("Which domino?");
-                //String playerChoice = in.nextLine();
+                String playerChoice = in.nextLine();
+
                 break;
             case "d":
                 currentPlayer.addDomToHand(boneyard.drawDom());
@@ -79,7 +81,7 @@ public class GameManager {
             p.setComputer();
             players.add(p);
         }
-        brd = new Board(players);
+        brd = new Board(players, boneyard.centerNum);
         printGameState();
     }
 
