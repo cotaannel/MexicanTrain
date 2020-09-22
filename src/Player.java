@@ -81,6 +81,14 @@ public class Player {
         }
     }
 
+    public Domino getDomino(int i) {
+        return hand.get(i);
+    }
+    public Domino getLastTrainDom() {
+        return train.get(train.size()-1);
+    }
+
+
     public void printHand() {
         System.out.println(getPlayerNum() + ": ");
         for(int i = 0; i < hand.size(); i++) {

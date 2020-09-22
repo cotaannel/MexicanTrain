@@ -6,6 +6,7 @@ import static java.lang.System.exit;
 public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
+    private ArrayList<Player> mexTrain;
     private Board brd;
     private Player currentPlayer = new Player();
     private Scanner in = new Scanner(System.in);
@@ -19,12 +20,16 @@ public class GameManager {
         in.close();
     }
 
-    public void startTurn() {
+    public void getPlayerTurn() {
         for(Player p : players){
             if(p.getPlayerTurn()) {
                 currentPlayer = p;
             }
         }
+    }
+
+    public void startTurn() {
+        getPlayerTurn();
         System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
         System.out.println("[p] play domino");
         System.out.println("[d] draw from boneyard");
@@ -33,8 +38,11 @@ public class GameManager {
         switch (playerOption) {
             case "p":
                 System.out.println("Which domino?");
-                String playerChoice = in.nextLine();
-
+                int domChoice = in.nextInt();
+                System.out.println("Which train?");
+                System.out.println("For Mexican Train:1, Rest of Players as shown:2,3,4 & so on.");
+                int trainChoice = in.nextInt();
+                checkIfLegal(domChoice, trainChoice);
                 break;
             case "d":
                 currentPlayer.addDomToHand(boneyard.drawDom());
@@ -46,6 +54,27 @@ public class GameManager {
         printGameState();
 
     }
+
+    public void checkIfLegal(int dom, int train) {
+        Domino playDom = currentPlayer.getDomino(dom+1);
+        if(train == 1) {
+            Player mexTrain = brd.getMexTrain();
+            Domino lastDom = mexTrain.getLastTrainDom();
+            if(lastDom.getRightNum() == playDom.getLeftNum() ||
+                    lastDom.getRightNum() == playDom.getRightNum()) {
+                if(lastDom.getRightNum() != playDom.getLeftNum()) {
+                    playDom.rotateTile();
+                    mexTrain.addDomToTrain(playDom);
+                }
+                mexTrain.addDomToTrain(playDom);
+            }
+        } //else if(test.getTrainState()) {
+            //Player test = players.get(train+1);
+
+        //}
+        printGameState();
+    }
+
 
     public void startGame() {
         Scanner in = new Scanner(System.in);

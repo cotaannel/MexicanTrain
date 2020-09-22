@@ -11,12 +11,21 @@ public class Board {
         this.players = players;
         center = new Domino(n,n);
         mexTrain = new Player("Mexican Train",0);
+        mexTrain.addDomToTrain(center);
         mexTrain.makeStateTrue();
         changePlayerTurn();
     }
 
     public String getCenter() {
         return center.toString();
+    }
+
+    public Player getMexTrain() {
+        return mexTrain;
+    }
+
+    public Domino getCenterDom() {
+        return center;
     }
 
     public void changePlayerTurn() {
