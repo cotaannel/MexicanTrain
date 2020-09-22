@@ -130,8 +130,6 @@ public class GameManager {
             }
         }
         System.out.println();
-        System.out.println("Center:");
-        System.out.println(brd.getCenter());
         System.out.println("Board:");
         brd.printBoard();
         System.out.println("Boneyard:");
