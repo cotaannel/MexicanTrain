@@ -6,17 +6,17 @@ import static java.lang.System.exit;
 public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
-    //private ArrayList<Player> mexTrain;
+    private boolean gameOver = false;
     private Board brd;
     private Player currentPlayer = new Player();
-    //private Player mexTrain;
     private Scanner in = new Scanner(System.in);
 
     public GameManager() {
         boneyard = new Boneyard();
-        //boneyard.printBoneyard();
         startGame();
-        startTurn();
+        while(!gameOver) {
+            startTurn();
+        };
 
         in.close();
     }
@@ -84,34 +84,39 @@ public class GameManager {
             }
         } else {
             Player playTrain = players.get(train-1);
-            if(playTrain.checkIfTrainEmpty() && center.getRightNum() == playDom.getLeftNum()
-                    || center.getRightNum() == playDom.getRightNum()) {
-                if(center.getRightNum() != playDom.getLeftNum()) {
-                    playDom.rotateTile();
-                }
-                playTrain.addDomToTrain(playDom);
-                currentPlayer.removeDomFromHand(playDom);
-                playTrain.makeTrainNonempty();
-            } else {
-                if(playTrain == currentPlayer || playTrain.getTrainState()) {
-                    Domino lastDom = playTrain.getLastTrainDom();
-                    if(lastDom.getRightNum() == playDom.getLeftNum() ||
-                            lastDom.getRightNum() == playDom.getRightNum()) {
-                        if(lastDom.getRightNum() != playDom.getLeftNum()) {
+            if(playTrain == currentPlayer || playTrain.getTrainState()) {
+                if(playTrain.checkIfTrainEmpty()) {
+                    if(center.getRightNum() == playDom.getLeftNum()
+                            || center.getRightNum() == playDom.getRightNum()) {
+                        if(center.getRightNum() != playDom.getLeftNum()) {
                             playDom.rotateTile();
                         }
                         playTrain.addDomToTrain(playDom);
                         currentPlayer.removeDomFromHand(playDom);
+                        playTrain.makeTrainNonempty();
                     }
                 } else {
-                    System.out.println("This train is not playable. Try again.");
-                    playDominoSetup();
+                    Domino lastDom = playTrain.getLastTrainDom();
+                    if(lastDom.getRightNum() == playDom.getLeftNum() ||
+                            lastDom.getRightNum() == playDom.getRightNum()) {
+                        if (lastDom.getRightNum() != playDom.getLeftNum()) {
+                            playDom.rotateTile();
+                        }
+                        playTrain.addDomToTrain(playDom);
+                        currentPlayer.removeDomFromHand(playDom);
+                    } else {
+                        System.out.println("That domino does not match.");
+                        playDominoSetup();
+                    }
                 }
-
+            } else {
+                System.out.println("This train is not playable. Try again.");
+                playDominoSetup();
             }
             //playTrain.printTrain();
         }
-
+        brd.changePlayerTurn();
+        //startTurn();
         printGameState();
     }
 //
