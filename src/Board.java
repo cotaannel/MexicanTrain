@@ -37,6 +37,7 @@ public class Board {
             p.makePlayerTurnFalse();
         }
         players.get(playerTurnInc).makePlayerTurn();
+        players.get(playerTurnInc).makeHasDrawnFalse();
         if(playerTurnInc == (players.size() - 1)) {
             playerTurnInc = 0;
         } else {

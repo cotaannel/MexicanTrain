@@ -42,10 +42,16 @@ public class GameManager {
                 playDominoSetup();
                 break;
             case "d":
-                currentPlayer.addDomToHand(boneyard.drawDom());
-                System.out.println("Domino was drawn.");
-                printGameState();
-                startTurn();
+                // does not let them draw twice in a turn
+                if(!currentPlayer.checkIfDrawn()) {
+                    currentPlayer.addDomToHand(boneyard.drawDom());
+                    currentPlayer.makeHasDrawnTrue();
+                    System.out.println("Domino was drawn.");
+                    printGameState();
+                    startTurn();
+                } else {
+                    System.out.println("Cannot draw again. Either play or skip.");
+                }
                 break;
             case "s":
                 brd.changePlayerTurn();
@@ -54,8 +60,6 @@ public class GameManager {
             case "q":
                 exit(0);
         }
-        //printGameState();
-
     }
 
     public void playDominoSetup() {
@@ -69,9 +73,8 @@ public class GameManager {
 
     public void checkIfLegal(int dom, int train) {
         Domino playDom = currentPlayer.getDomino(dom-1);
-        //System.out.println(playDom.toString());
         Domino center = brd.getCenterDom();
-        //System.out.println(lastDom.toString());
+        //if mexican train chosen
         if(train == 0) {
             Player mexTrain = brd.getMexTrain();
             //mexTrain.printTrain();
@@ -90,8 +93,10 @@ public class GameManager {
                 playDominoSetup();
             }
         } else {
+            //if a player train chosen
             Player playTrain = players.get(train-1);
             if(playTrain == currentPlayer || playTrain.getTrainState()) {
+                //checks if train is empty
                 if(playTrain.checkIfTrainEmpty()) {
                     if(center.getRightNum() == playDom.getLeftNum()
                             || center.getRightNum() == playDom.getRightNum()) {
@@ -101,8 +106,12 @@ public class GameManager {
                         playTrain.addDomToTrain(playDom);
                         currentPlayer.removeDomFromHand(playDom);
                         playTrain.makeTrainNonempty();
+                    } else {
+                        System.out.println("This domino cannot go there. Try again.");
+                        playDominoSetup();
                     }
                 } else {
+                    //if train not empty
                     Domino lastDom = playTrain.getLastTrainDom();
                     if(lastDom.getRightNum() == playDom.getLeftNum() ||
                             lastDom.getRightNum() == playDom.getRightNum()) {
@@ -120,17 +129,10 @@ public class GameManager {
                 System.out.println("This train is not playable. Try again.");
                 playDominoSetup();
             }
-            //playTrain.printTrain();
         }
         brd.changePlayerTurn();
-        //startTurn();
         printGameState();
     }
-//
-//    public boolean checkReverse(Domino lastDom, Domino playDom) {
-//
-//
-//    }
 
 
     public void startGame() {
@@ -177,6 +179,11 @@ public class GameManager {
         for(Player p : players){
             if(!p.checkIfComputer()) {
                 p.printHand();
+                //adds labels to dominoes: 1,2,3,...
+                for(int i = 1; i < (p.getHandSize()+1); i++) {
+                    System.out.print(i + "      ");
+                }
+                System.out.println();
             }
         }
         System.out.println();
@@ -184,13 +191,20 @@ public class GameManager {
         for(Player p : players){
             if(p.checkIfComputer()) {
                 p.printHand();
+                //adds labels to dominoes: 1,2,3,...
+                for(int i = 1; i < (p.getHandSize()+1); i++) {
+                    System.out.print(i + "      ");
+                }
+                System.out.println();
             }
         }
         System.out.println();
         System.out.println("Board:");
         brd.printBoard();
+        System.out.println();
         System.out.println("Boneyard:");
         boneyard.printBoneyard();
+        System.out.println();
         System.out.println("Current player:");
         for(Player p : players){
             if(p.getPlayerTurn()) {

@@ -6,6 +6,7 @@ public class Player {
     private ArrayList<Domino> train;
     private boolean trainState = false;
     private boolean isComputer = false;
+    private boolean hasDrawn = false;
     private boolean playerTurn = false;
     private boolean trainEmpty = true;
     private int startingDomNum;
@@ -24,6 +25,18 @@ public class Player {
 
     public boolean checkIfTrainEmpty() {
         return trainEmpty;
+    }
+
+    public void makeHasDrawnTrue() {
+        hasDrawn = true;
+    }
+
+    public void makeHasDrawnFalse() {
+        hasDrawn = false;
+    }
+
+    public boolean checkIfDrawn() {
+        return hasDrawn;
     }
 
     public void makeTrainNonempty() {
@@ -101,14 +114,14 @@ public class Player {
     public void printHand() {
         System.out.println(getPlayerNum() + ": ");
         for(int i = 0; i < hand.size(); i++) {
-            System.out.print(hand.get(i).toString() + " " );
+            System.out.print(hand.get(i).toString() + "  " );
         }
         System.out.println();
     }
     public void printTrain() {
         System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
         for(int i = 0; i < train.size(); i++) {
-            System.out.print(train.get(i).toString() + " " );
+            System.out.print(train.get(i).toString() + "  " );
         }
         System.out.println();
     }
