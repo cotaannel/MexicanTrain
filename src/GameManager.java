@@ -44,15 +44,20 @@ public class GameManager {
                 playDominoSetup();
                 break;
             case "d":
-                // does not let them draw twice in a turn
-                if(!currentPlayer.checkIfDrawn()) {
-                    currentPlayer.addDomToHand(boneyard.drawDom());
-                    currentPlayer.makeHasDrawnTrue();
-                    System.out.println("Domino was drawn.");
-                    printGameState();
-                    startTurn();
+                //if there is a playable domino, cannot draw
+                if(checkPlayableSpots()) {
+                    System.out.println("Cannot draw, there is a playable domino.");
                 } else {
-                    System.out.println("Cannot draw again. Either play or skip.");
+                    // does not let them draw twice in a turn
+                    if(!currentPlayer.checkIfDrawn()) {
+                        currentPlayer.addDomToHand(boneyard.drawDom());
+                        currentPlayer.makeHasDrawnTrue();
+                        System.out.println("Domino was drawn.");
+                        printGameState();
+                        startTurn();
+                    } else {
+                        System.out.println("Cannot draw again. Either play or skip.");
+                    }
                 }
                 break;
             case "s":
