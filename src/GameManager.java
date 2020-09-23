@@ -34,6 +34,7 @@ public class GameManager {
         System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
         System.out.println("[p] play domino");
         System.out.println("[d] draw from boneyard");
+        System.out.println("[s] skip turn");
         System.out.println("[q] quit");
         String playerOption = in.nextLine();
         switch (playerOption) {
@@ -43,6 +44,12 @@ public class GameManager {
             case "d":
                 currentPlayer.addDomToHand(boneyard.drawDom());
                 System.out.println("Domino was drawn.");
+                printGameState();
+                startTurn();
+                break;
+            case "s":
+                brd.changePlayerTurn();
+                currentPlayer.makeStateTrue();
                 break;
             case "q":
                 exit(0);
