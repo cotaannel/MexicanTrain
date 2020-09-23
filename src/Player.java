@@ -7,6 +7,7 @@ public class Player {
     private boolean trainState = false;
     private boolean isComputer = false;
     private boolean playerTurn = false;
+    private boolean trainEmpty = true;
     private int startingDomNum;
 
     public Player(String playerNum, int i) {
@@ -19,6 +20,14 @@ public class Player {
     public Player() {
         hand = new ArrayList<Domino>();
         train = new ArrayList<Domino>();
+    }
+
+    public boolean checkIfTrainEmpty() {
+        return trainEmpty;
+    }
+
+    public void makeTrainNonempty() {
+        trainEmpty = false;
     }
 
     public void makePlayerTurn() {

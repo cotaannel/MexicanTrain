@@ -38,12 +38,7 @@ public class GameManager {
         String playerOption = in.nextLine();
         switch (playerOption) {
             case "p":
-                System.out.println("Which domino?");
-                int domChoice = in.nextInt();
-                System.out.println("Which train?");
-                System.out.println("For Mexican Train:1, Rest of Players as shown:2,3,4 & so on.");
-                int trainChoice = in.nextInt();
-                checkIfLegal(domChoice, trainChoice);
+                playDominoSetup();
                 break;
             case "d":
                 currentPlayer.addDomToHand(boneyard.drawDom());
@@ -56,30 +51,74 @@ public class GameManager {
 
     }
 
+    public void playDominoSetup() {
+        System.out.println("Which domino?");
+        int domChoice = in.nextInt();
+        System.out.println("Which train?");
+        System.out.println("For Mexican Train:0, Rest of Players as shown:1,2,3,4 & so on.");
+        int trainChoice = in.nextInt();
+        checkIfLegal(domChoice, trainChoice);
+    }
+
     public void checkIfLegal(int dom, int train) {
         Domino playDom = currentPlayer.getDomino(dom-1);
         //System.out.println(playDom.toString());
-        Player mexTrain = brd.getMexTrain();
-        //mexTrain.printTrain();
-        Domino lastDom = mexTrain.getLastTrainDom();
+        Domino center = brd.getCenterDom();
         //System.out.println(lastDom.toString());
-        if(train == 1) {
-
+        if(train == 0) {
+            Player mexTrain = brd.getMexTrain();
+            //mexTrain.printTrain();
+            Domino lastDom = mexTrain.getLastTrainDom();
             if(lastDom.getRightNum() == playDom.getLeftNum() ||
                     lastDom.getRightNum() == playDom.getRightNum()) {
                 if(lastDom.getRightNum() != playDom.getLeftNum()) {
                     playDom.rotateTile();
                 }
                 mexTrain.addDomToTrain(playDom);
+                currentPlayer.removeDomFromHand(playDom);
+
+            } else {
+                System.out.println("That domino cannot go on the Mexican Train.");
+                System.out.println("Please pick again.");
+                playDominoSetup();
+            }
+        } else {
+            Player playTrain = players.get(train-1);
+            if(playTrain.checkIfTrainEmpty() && center.getRightNum() == playDom.getLeftNum()
+                    || center.getRightNum() == playDom.getRightNum()) {
+                if(center.getRightNum() != playDom.getLeftNum()) {
+                    playDom.rotateTile();
+                }
+                playTrain.addDomToTrain(playDom);
+                currentPlayer.removeDomFromHand(playDom);
+                playTrain.makeTrainNonempty();
+            } else {
+                if(playTrain == currentPlayer || playTrain.getTrainState()) {
+                    Domino lastDom = playTrain.getLastTrainDom();
+                    if(lastDom.getRightNum() == playDom.getLeftNum() ||
+                            lastDom.getRightNum() == playDom.getRightNum()) {
+                        if(lastDom.getRightNum() != playDom.getLeftNum()) {
+                            playDom.rotateTile();
+                        }
+                        playTrain.addDomToTrain(playDom);
+                        currentPlayer.removeDomFromHand(playDom);
+                    }
+                } else {
+                    System.out.println("This train is not playable. Try again.");
+                    playDominoSetup();
+                }
 
             }
-        } //else if(test.getTrainState()) {
-            //Player test = players.get(train+1);
-
-        //}
+            //playTrain.printTrain();
+        }
 
         printGameState();
     }
+//
+//    public boolean checkReverse(Domino lastDom, Domino playDom) {
+//
+//
+//    }
 
 
     public void startGame() {
