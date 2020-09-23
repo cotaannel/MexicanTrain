@@ -6,9 +6,10 @@ import static java.lang.System.exit;
 public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
-    private ArrayList<Player> mexTrain;
+    //private ArrayList<Player> mexTrain;
     private Board brd;
     private Player currentPlayer = new Player();
+    //private Player mexTrain;
     private Scanner in = new Scanner(System.in);
 
     public GameManager() {
@@ -51,27 +52,32 @@ public class GameManager {
             case "q":
                 exit(0);
         }
-        printGameState();
+        //printGameState();
 
     }
 
     public void checkIfLegal(int dom, int train) {
-        Domino playDom = currentPlayer.getDomino(dom+1);
+        Domino playDom = currentPlayer.getDomino(dom-1);
+        //System.out.println(playDom.toString());
+        Player mexTrain = brd.getMexTrain();
+        //mexTrain.printTrain();
+        Domino lastDom = mexTrain.getLastTrainDom();
+        //System.out.println(lastDom.toString());
         if(train == 1) {
-            Player mexTrain = brd.getMexTrain();
-            Domino lastDom = mexTrain.getLastTrainDom();
+
             if(lastDom.getRightNum() == playDom.getLeftNum() ||
                     lastDom.getRightNum() == playDom.getRightNum()) {
                 if(lastDom.getRightNum() != playDom.getLeftNum()) {
                     playDom.rotateTile();
-                    mexTrain.addDomToTrain(playDom);
                 }
                 mexTrain.addDomToTrain(playDom);
+
             }
         } //else if(test.getTrainState()) {
             //Player test = players.get(train+1);
 
         //}
+
         printGameState();
     }
 

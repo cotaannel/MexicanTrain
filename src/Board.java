@@ -15,6 +15,10 @@ public class Board {
         mexTrain.makeStateTrue();
         changePlayerTurn();
     }
+//    public void updateBoard(Player p) {
+//        this.mexTrain = p;
+//        mexTrain.printTrain();
+//    }
 
     public String getCenter() {
         return center.toString();
