@@ -13,6 +13,8 @@ public class GameManager {
 
     public GameManager() {
         boneyard = new Boneyard();
+
+//        boneyard.printBoneyard();
         startGame();
         while(!gameOver) {
             startTurn();
@@ -54,12 +56,48 @@ public class GameManager {
                 }
                 break;
             case "s":
-                brd.changePlayerTurn();
-                currentPlayer.makeStateTrue();
+                if(checkPlayableSpots()) {
+                    System.out.println("Cannot skip, there is a playable domino.");
+                } else {
+                    brd.changePlayerTurn();
+                    currentPlayer.makeStateTrue();
+                }
                 break;
             case "q":
                 exit(0);
         }
+    }
+
+    public boolean checkPlayableSpots() {
+        //goes through each dom in players hand
+        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
+            Domino dom = currentPlayer.getDomino(i);
+            Domino center = brd.getCenterDom();
+            //check if dom can go on a playable train
+            for(Player p : players){
+                if(p.checkIfTrainEmpty()) {
+                    if(center.getRightNum() == dom.getLeftNum()
+                            || center.getRightNum() == dom.getRightNum()) {
+                        return true;
+                    }
+                } else {
+                    if(p.getTrainState() || p.getPlayerTurn()) {
+                        Domino lastDom = p.getLastTrainDom();
+                        if(lastDom.getRightNum() == dom.getLeftNum() ||
+                                lastDom.getRightNum() == dom.getRightNum()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            Player mexTrain = brd.getMexTrain();
+            Domino lastMexDom = mexTrain.getLastTrainDom();
+            if(lastMexDom.getRightNum() == dom.getLeftNum() ||
+                    lastMexDom.getRightNum() == dom.getRightNum()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void playDominoSetup() {

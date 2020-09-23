@@ -13,10 +13,10 @@ public class Boneyard {
 
     public void createBoneyard() {
         for(int i = 0; i <= 9; i++) {
-            int j = 0;
-            while (j <= 9) {
+            int j = i;
+            while (j >= 0) {
                 boneyard.add(new Domino(j,i));
-                j++;
+                j--;
             }
         }
         //removes the center domino from boneyard
