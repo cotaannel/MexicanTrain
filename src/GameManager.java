@@ -64,6 +64,11 @@ public class GameManager {
                 if(checkPlayableSpots()) {
                     System.out.println("Cannot skip, there is a playable domino.");
                 } else {
+                    //no playable spots
+                    //makes current player's train true if has drawn and has no moves
+                    if(currentPlayer.checkIfDrawn()) {
+                        currentPlayer.makeStateTrue();
+                    }
                     brd.changePlayerTurn();
                     currentPlayer.makeStateTrue();
                 }
@@ -167,6 +172,10 @@ public class GameManager {
                         System.out.println("That domino does not match.");
                         playDominoSetup();
                     }
+                }
+                //if player plays on own train, makes train false
+                if(playTrain == currentPlayer && !currentPlayer.getTrainState()) {
+                    currentPlayer.makeStateFalse();
                 }
             } else {
                 System.out.println("This train is not playable. Try again.");
