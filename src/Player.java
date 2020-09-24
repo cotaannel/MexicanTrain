@@ -10,6 +10,7 @@ public class Player {
     private boolean playerTurn = false;
     private boolean trainEmpty = true;
     private int startingDomNum;
+    private int score = 0;
 
     public Player(String playerNum, int i) {
         this.playerNum = playerNum;

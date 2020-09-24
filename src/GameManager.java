@@ -7,9 +7,11 @@ public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private boolean gameOver = false;
+    private boolean doublePlayed = false;
     private Board brd;
     private Player currentPlayer = new Player();
     private Scanner in = new Scanner(System.in);
+    private int rounds = 10;
 
     public GameManager() {
         boneyard = new Boneyard();
@@ -18,10 +20,12 @@ public class GameManager {
         startGame();
         while(!gameOver) {
             startTurn();
-        };
+            //if
+        }
 
         in.close();
     }
+
 
     public void getPlayerTurn() {
         for(Player p : players){
@@ -134,6 +138,10 @@ public class GameManager {
                 }
                 mexTrain.addDomToTrain(playDom);
                 currentPlayer.removeDomFromHand(playDom);
+                if(checkIfDomDouble(playDom)) {
+                    doublePlayed = true;
+                    System.out.println("Double played. Go again.");
+                }
 
             } else {
                 System.out.println("That domino cannot go on the Mexican Train.");
@@ -154,6 +162,10 @@ public class GameManager {
                         playTrain.addDomToTrain(playDom);
                         currentPlayer.removeDomFromHand(playDom);
                         playTrain.makeTrainNonempty();
+                        if(checkIfDomDouble(playDom)) {
+                            doublePlayed = true;
+                            System.out.println("Double played. Go again.");
+                        }
                     } else {
                         System.out.println("This domino cannot go there. Try again.");
                         playDominoSetup();
@@ -168,6 +180,10 @@ public class GameManager {
                         }
                         playTrain.addDomToTrain(playDom);
                         currentPlayer.removeDomFromHand(playDom);
+                        if(checkIfDomDouble(playDom)) {
+                            doublePlayed = true;
+                            System.out.println("Double played. Go again.");
+                        }
                     } else {
                         System.out.println("That domino does not match.");
                         playDominoSetup();
@@ -182,7 +198,11 @@ public class GameManager {
                 playDominoSetup();
             }
         }
-        brd.changePlayerTurn();
+
+        if (!doublePlayed) {
+            brd.changePlayerTurn();
+            doublePlayed = false;
+        }
         printGameState();
     }
 
@@ -223,6 +243,13 @@ public class GameManager {
         }
         brd = new Board(players, boneyard.centerNum);
         printGameState();
+    }
+
+    public boolean checkIfDomDouble(Domino dom) {
+        if(dom.getLeftNum() == dom.getRightNum()) {
+            return true;
+        }
+        return false;
     }
 
     public void printGameState() {
