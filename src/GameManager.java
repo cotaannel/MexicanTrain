@@ -8,7 +8,7 @@ public class GameManager {
     private ArrayList<Player> players;
     private boolean gameOver = false;
     private boolean doublePlayed = false;
-    private Board brd;
+    private Board board;
     private Player currentPlayer = new Player();
     private Scanner in = new Scanner(System.in);
     private int rounds = 10;
@@ -46,6 +46,9 @@ public class GameManager {
         switch (playerOption) {
             case "p":
                 playDominoSetup();
+                if(doublePlayed) {
+                    doublePlayed = false;
+                }
                 break;
             case "d":
                 //if there is a playable domino, cannot draw
@@ -73,8 +76,9 @@ public class GameManager {
                     if(currentPlayer.checkIfDrawn()) {
                         currentPlayer.makeStateTrue();
                     }
-                    brd.changePlayerTurn();
+                    board.changePlayerTurn();
                     currentPlayer.makeStateTrue();
+                    printGameState();
                 }
                 break;
             case "q":
@@ -86,7 +90,7 @@ public class GameManager {
         //goes through each dom in players hand
         for(int i = 0; i < currentPlayer.getHandSize(); i++) {
             Domino dom = currentPlayer.getDomino(i);
-            Domino center = brd.getCenterDom();
+            Domino center = board.getCenterDom();
             //check if dom can go on a playable train
             for(Player p : players){
                 if(p.checkIfTrainEmpty()) {
@@ -104,7 +108,7 @@ public class GameManager {
                     }
                 }
             }
-            Player mexTrain = brd.getMexTrain();
+            Player mexTrain = board.getMexTrain();
             Domino lastMexDom = mexTrain.getLastTrainDom();
             if(lastMexDom.getRightNum() == dom.getLeftNum() ||
                     lastMexDom.getRightNum() == dom.getRightNum()) {
@@ -125,10 +129,10 @@ public class GameManager {
 
     public void checkIfLegal(int dom, int train) {
         Domino playDom = currentPlayer.getDomino(dom-1);
-        Domino center = brd.getCenterDom();
+        Domino center = board.getCenterDom();
         //if mexican train chosen
         if(train == 0) {
-            Player mexTrain = brd.getMexTrain();
+            Player mexTrain = board.getMexTrain();
             //mexTrain.printTrain();
             Domino lastDom = mexTrain.getLastTrainDom();
             if(lastDom.getRightNum() == playDom.getLeftNum() ||
@@ -200,7 +204,7 @@ public class GameManager {
         }
 
         if (!doublePlayed) {
-            brd.changePlayerTurn();
+            board.changePlayerTurn();
             doublePlayed = false;
         }
         printGameState();
@@ -241,7 +245,7 @@ public class GameManager {
             p.setComputer();
             players.add(p);
         }
-        brd = new Board(players, boneyard.centerNum);
+        board = new Board(players, boneyard.centerNum);
         printGameState();
     }
 
@@ -279,7 +283,7 @@ public class GameManager {
         }
         System.out.println();
         System.out.println("Board:");
-        brd.printBoard();
+        board.printBoard();
         System.out.println();
         System.out.println("Boneyard:");
         boneyard.printBoneyard();
