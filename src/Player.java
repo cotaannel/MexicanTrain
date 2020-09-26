@@ -9,6 +9,7 @@ public class Player {
     private boolean hasDrawn = false;
     private boolean playerTurn = false;
     private boolean trainEmpty = true;
+    private boolean canPlayNonDoubleTrain = false;
     private int startingDomNum;
     private int score = 0;
 
@@ -34,6 +35,17 @@ public class Player {
 
     public void makeHasDrawnFalse() {
         hasDrawn = false;
+    }
+    public boolean checkIfCanPlayNonDoubleTrain() {
+        return canPlayNonDoubleTrain;
+    }
+
+    public void makeTrueCanPlayNonDoubleTrain() {
+        canPlayNonDoubleTrain = true;
+    }
+
+    public void makeFalseCanPlayNonDoubleTrain() {
+        canPlayNonDoubleTrain = false;
     }
 
     public boolean checkIfDrawn() {

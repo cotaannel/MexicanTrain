@@ -50,6 +50,9 @@ public class GameManager {
                 if(doublePlayed) {
                     doublePlayed = false;
                 }
+//                if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+//                    currentPlayer.makeFalseCanPlayNonDoubleTrain();
+//                }
                 break;
             case "d":
                 //if there is a playable domino, cannot draw
@@ -136,11 +139,15 @@ public class GameManager {
     public void checkIfLegal(int dom, int train) {
         Domino playDom = currentPlayer.getDomino(dom-1);
         Domino center = board.getCenterDom();
+        Player mexTrain = board.getMexTrain();
 
-        if(!doubleOpen) {
-            if(train == 0) {
-                Player mexTrain = board.getMexTrain();
-                //mexTrain.printTrain();
+        if(train == 0) {
+            playTrain = mexTrain;
+        } else {
+            playTrain = players.get(train-1);
+        }
+        if(!doubleOpen || currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+            if(playTrain == mexTrain) {
                 Domino lastDom = mexTrain.getLastTrainDom();
                 if(lastDom.getRightNum() == playDom.getLeftNum() ||
                         lastDom.getRightNum() == playDom.getRightNum()) {
@@ -153,6 +160,7 @@ public class GameManager {
                         doubleDom = mexTrain;
                         doublePlayed = true;
                         System.out.println("Double played. Go again.");
+                        currentPlayer.makeTrueCanPlayNonDoubleTrain();
                     }
 
                 } else {
@@ -162,7 +170,6 @@ public class GameManager {
                 }
             } else {
                 //if a player train chosen
-                Player playTrain = players.get(train-1);
                 if(playTrain == currentPlayer || playTrain.getTrainState()) {
                     //checks if train is empty
                     if(playTrain.checkIfTrainEmpty()) {
@@ -179,6 +186,7 @@ public class GameManager {
                                 doubleDom = playTrain;
                                 doublePlayed = true;
                                 System.out.println("Double played. Go again.");
+                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
                             }
                         } else {
                             System.out.println("This domino cannot go there. Try again.");
@@ -199,6 +207,7 @@ public class GameManager {
                                 doubleDom = playTrain;
                                 doublePlayed = true;
                                 System.out.println("Double played. Go again.");
+                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
                             }
                         } else {
                             System.out.println("That domino does not match.");
@@ -213,7 +222,8 @@ public class GameManager {
         } else {
             if(playTrain != doubleDom) {
                 System.out.println("There is a double open that needs to be played.");
-                playDominoSetup();
+                //playDominoSetup();
+                startTurn();
             } else {
                 doubleOpen = false;
                 checkIfLegal(dom,train);
@@ -227,6 +237,10 @@ public class GameManager {
         if (!doublePlayed) {
             board.changePlayerTurn();
             doublePlayed = false;
+            if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+                currentPlayer.makeFalseCanPlayNonDoubleTrain();
+                System.out.println("There is a double open that needs to be closed");
+            }
         }
         if(doublePlayed) {
             if(doubleDom != playTrain) {
