@@ -3,9 +3,10 @@ import java.util.Scanner;
 
 import static java.lang.System.exit;
 
-public class GameManager {
+public class GameManager<scoreHolder> {
     private Boneyard boneyard;
     private ArrayList<Player> players;
+    private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private boolean gameOver = false;
     private boolean roundOver = false;
     private boolean doublePlayed = false;
@@ -13,9 +14,8 @@ public class GameManager {
     private boolean changeTurn = true;
     private Board board;
     private Player currentPlayer = new Player();
-    private Player playTrain = new Player();
     private Player doubleDom = new Player();
-    private Scanner in = new Scanner(System.in);
+    private final Scanner in = new Scanner(System.in);
     private int round = 1;
     private int numHumanPlayers;
     private int numComPlayers;
@@ -29,11 +29,35 @@ public class GameManager {
             startTurn();
             if(boneyard.boneyard.isEmpty()) {
                 System.out.println("Round " + round + " is over.");
+                getScore();
+                System.out.println("Scores:");
+                for(Player p : players){
+                    System.out.println(p.getPlayerNum() + ": " + p.getScore());
+                }
+                System.out.println();
                 roundOver = true;
                 startNewRound();
             }
         }
         in.close();
+    }
+
+    public void getScore() {
+        int i = 0;
+        for(Player p : players){
+            p.calculateScore();
+            scoreHolder.set(i, p.getScore());
+            i++;
+        }
+        updateScore();
+    }
+
+    public void updateScore(){
+        int i =  0;
+        for(Player p : players){
+            p.updateScore(scoreHolder.get(i)+p.getScore());
+            i++;
+        }
     }
 
     public void getPlayerTurn() {
@@ -151,6 +175,7 @@ public class GameManager {
         Domino center = board.getCenterDom();
         Player mexTrain = board.getMexTrain();
 
+        Player playTrain;
         if(train == 0) {
             playTrain = mexTrain;
         } else {
@@ -270,8 +295,10 @@ public class GameManager {
         System.out.println("Up to 4 players can play with any mix of human and computer players.");
         System.out.println("Please enter the TOTAL number of players:");
         int totalPlayers = in.nextInt();
+
+
         //changes starting number of dominoes depending on number of players
-        if (totalPlayers == 4) {
+        if(totalPlayers == 4) {
             totalStartingDom = 10;
         } else if(totalPlayers == 3) {
             totalStartingDom = 13;
@@ -281,19 +308,21 @@ public class GameManager {
 
         System.out.println("Please enter the number of human players:");
         numHumanPlayers = in.nextInt();
-        for (int i = 1; i <= numHumanPlayers; i++) {
+        for(int i = 1; i <= numHumanPlayers; i++) {
             Player p = new Player("Player" + i, totalStartingDom);
             p.createHand(boneyard);
             players.add(p);
+            scoreHolder.add(0);
         }
 
         System.out.println("Please enter the number of computer players:");
         numComPlayers = in.nextInt();
-        for (int i = 1; i <= numComPlayers; i++) {
+        for(int i = 1; i <= numComPlayers; i++) {
             Player p = new Player("Computer" + i, totalStartingDom);
             p.createHand(boneyard);
             p.setComputer();
             players.add(p);
+            scoreHolder.add(0);
         }
         board = new Board(players, centerNum);
         printGameState();
@@ -325,10 +354,7 @@ public class GameManager {
     }
 
     public boolean checkIfDomDouble(Domino dom) {
-        if(dom.getLeftNum() == dom.getRightNum()) {
-            return true;
-        }
-        return false;
+        return dom.getLeftNum() == dom.getRightNum();
     }
 
     public void printGameState() {

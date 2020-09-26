@@ -29,6 +29,24 @@ public class Player {
         return trainEmpty;
     }
 
+    public int calculateScore() {
+
+        for(int i = 0; i < hand.size(); i++) {
+            score += hand.get(i).getLeftNum();
+            score += hand.get(i).getRightNum();
+        }
+        return score;
+    }
+
+    public void updateScore(int score) {
+        this.score = score;
+
+    }
+
+    public int getScore() {
+        return score;
+    }
+
     public void makeHasDrawnTrue() {
         hasDrawn = true;
     }
