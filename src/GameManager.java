@@ -69,13 +69,16 @@ public class GameManager {
                 }
                 break;
             case "s":
-
-                ///have to fixx has to draw and check playable spots before can skip
                 if(checkPlayableSpots()) {
+                    //if there are playable spots, can't skip
                     System.out.println("Cannot skip, there is a playable domino.");
+                } else if(!currentPlayer.checkIfDrawn()) {
+                    //if there aren't playable spots, but hasn't drawn yet, can't skip
+                    //has to draw first
+                    System.out.println("Cannot skip, first draw and try to play again.");
                 } else {
-                    //no playable spots
-                    //makes current player's train true if has drawn and has no moves
+                    //no playable spots & has drawn
+                    //makes current player's train true
                     if(currentPlayer.checkIfDrawn()) {
                         currentPlayer.makeStateTrue();
                     }
