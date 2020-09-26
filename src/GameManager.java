@@ -10,6 +10,7 @@ public class GameManager {
     private boolean roundOver = false;
     private boolean doublePlayed = false;
     private boolean doubleOpen = false;
+    private boolean changeTurn = true;
     private Board board;
     private Player currentPlayer = new Player();
     private Player playTrain = new Player();
@@ -26,20 +27,14 @@ public class GameManager {
         startGame();
         while(!roundOver) {
             startTurn();
-            //if
             if(boneyard.boneyard.isEmpty()) {
                 System.out.println("Round " + round + " is over.");
                 roundOver = true;
                 startNewRound();
             }
         }
-
-
-
-
         in.close();
     }
-
 
     public void getPlayerTurn() {
         for(Player p : players){
@@ -85,6 +80,7 @@ public class GameManager {
                 }
                 break;
             case "s":
+                //have to fix, if double played, and cannot make another play, cannot skip until drawn
                 if(checkPlayableSpots()) {
                     //if there are playable spots, can't skip
                     System.out.println("Cannot skip, there is a playable domino.");
@@ -180,7 +176,7 @@ public class GameManager {
                 } else {
                     System.out.println("That domino cannot go on the Mexican Train.");
                     System.out.println("Please pick again.");
-                    playDominoSetup();
+                    changeTurn = false;
                 }
             } else {
                 //if a player train chosen
@@ -196,6 +192,7 @@ public class GameManager {
                             currentPlayer.removeDomFromHand(playDom);
                             currentPlayer.makeStateFalse();
                             playTrain.makeTrainNonempty();
+                            changeTurn = true;
                             if(checkIfDomDouble(playDom)) {
                                 doubleDom = playTrain;
                                 doublePlayed = true;
@@ -204,7 +201,7 @@ public class GameManager {
                             }
                         } else {
                             System.out.println("This domino cannot go there. Try again.");
-                            playDominoSetup();
+                            changeTurn = false;
                         }
                     } else {
                         //if train not empty
@@ -217,6 +214,7 @@ public class GameManager {
                             playTrain.addDomToTrain(playDom);
                             currentPlayer.removeDomFromHand(playDom);
                             currentPlayer.makeStateFalse();
+                            changeTurn = true;
                             if(checkIfDomDouble(playDom)) {
                                 doubleDom = playTrain;
                                 doublePlayed = true;
@@ -225,34 +223,28 @@ public class GameManager {
                             }
                         } else {
                             System.out.println("That domino does not match.");
-                            //playDominoSetup();
-                            startTurn();
+                            changeTurn = false;
                         }
                     }
                 } else {
                     System.out.println("This train is not playable. Try again.");
-                    playDominoSetup();
+                    changeTurn = false;
                 }
             }
         } else {
             if(playTrain != doubleDom) {
                 System.out.println("There is a double open that needs to be played.");
-                //playDominoSetup();
-                startTurn();
+                changeTurn = false;
             } else {
                 doubleOpen = false;
                 checkIfLegal(dom,train);
-
             }
         }
 
-        //have to fix, if double played, and cannot make another play, cannot skip until drawed
-
-
-
-
         if (!doublePlayed) {
-            board.changePlayerTurn();
+            if(changeTurn) {
+                board.changePlayerTurn();
+            }
             doublePlayed = false;
             if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
                 currentPlayer.makeFalseCanPlayNonDoubleTrain();
@@ -265,9 +257,10 @@ public class GameManager {
 
             }
         }
-        printGameState();
+        if(changeTurn) {
+            printGameState();
+        }
     }
-
 
     public void startGame() {
         Scanner in = new Scanner(System.in);

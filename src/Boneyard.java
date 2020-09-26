@@ -13,21 +13,21 @@ public class Boneyard {
 
     public void createBoneyard() {
 
-//        for(int i = 0; i <= 9; i++) {
-//            int j = i;
-//            while (j >= 0) {
-//                boneyard.add(new Domino(j,i));
-//                j--;
-//            }
-//        }
-
-        for(int i = 0; i <= 8; i++) {
+        for(int i = 0; i <= 9; i++) {
             int j = i;
             while (j >= 0) {
-                boneyard.add(new Domino(1,1));
+                boneyard.add(new Domino(j,i));
                 j--;
             }
         }
+
+//        for(int i = 0; i <= 8; i++) {
+//            int j = i;
+//            while (j >= 0) {
+//                boneyard.add(new Domino(1,1));
+//                j--;
+//            }
+//        }
         //removes the center domino from boneyard
         Domino dom = new Domino(centerNum,centerNum);
         for(int i = 0; i < boneyard.size(); i++) {
