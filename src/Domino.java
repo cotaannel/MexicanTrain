@@ -21,7 +21,7 @@ public class Domino {
         this.rightNum = firstNum;
     }
 
-    //print dominos in form [0|0]
+    //print dominoes in form [0|0]
     public String toString() {
         return "[" + leftNum + "|" + rightNum + "]";
     }

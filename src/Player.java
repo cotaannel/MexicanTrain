@@ -15,14 +15,14 @@ public class Player {
 
     public Player(String playerNum, int i) {
         this.playerNum = playerNum;
-        hand = new ArrayList<Domino>();
-        train = new ArrayList<Domino>();
+        hand = new ArrayList<>();
+        train = new ArrayList<>();
         startingDomNum = i;
     }
 
     public Player() {
-        hand = new ArrayList<Domino>();
-        train = new ArrayList<Domino>();
+        hand = new ArrayList<>();
+        train = new ArrayList<>();
     }
 
     public boolean checkIfTrainEmpty() {
@@ -122,7 +122,6 @@ public class Player {
     public Domino getLastTrainDom() {
         return train.get(train.size()-1);
     }
-
 
     public void printHand() {
         System.out.println(getPlayerNum() + ": ");
