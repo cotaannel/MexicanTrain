@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 import static java.lang.System.exit;
 
-public class GameManager<scoreHolder> {
+public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
@@ -46,16 +46,8 @@ public class GameManager<scoreHolder> {
         int i = 0;
         for(Player p : players){
             p.calculateScore();
-            scoreHolder.set(i, p.getScore());
-            i++;
-        }
-        updateScore();
-    }
-
-    public void updateScore(){
-        int i =  0;
-        for(Player p : players){
             p.updateScore(scoreHolder.get(i)+p.getScore());
+            scoreHolder.set(i, p.getScore());
             i++;
         }
     }
