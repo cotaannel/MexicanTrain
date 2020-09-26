@@ -7,6 +7,7 @@ public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private boolean gameOver = false;
+    private boolean roundOver = false;
     private boolean doublePlayed = false;
     private boolean doubleOpen = false;
     private Board board;
@@ -14,15 +15,27 @@ public class GameManager {
     private Player playTrain = new Player();
     private Player doubleDom = new Player();
     private Scanner in = new Scanner(System.in);
-    private int rounds = 10;
+    private int round = 1;
+    private int numHumanPlayers;
+    private int numComPlayers;
+    private int totalStartingDom = 0;
+    private int centerNum = 9;
 
     public GameManager() {
-        boneyard = new Boneyard();
+        boneyard = new Boneyard(centerNum);
         startGame();
-        while(!gameOver) {
+        while(!roundOver) {
             startTurn();
             //if
+            if(boneyard.boneyard.isEmpty()) {
+                System.out.println("Round " + round + " is over.");
+                roundOver = true;
+                startNewRound();
+            }
         }
+
+
+
 
         in.close();
     }
@@ -93,6 +106,7 @@ public class GameManager {
             case "q":
                 exit(0);
         }
+
     }
 
     public boolean checkPlayableSpots() {
@@ -211,7 +225,8 @@ public class GameManager {
                             }
                         } else {
                             System.out.println("That domino does not match.");
-                            playDominoSetup();
+                            //playDominoSetup();
+                            startTurn();
                         }
                     }
                 } else {
@@ -230,6 +245,8 @@ public class GameManager {
 
             }
         }
+
+        //have to fix, if double played, and cannot make another play, cannot skip until drawed
 
 
 
@@ -255,7 +272,6 @@ public class GameManager {
     public void startGame() {
         Scanner in = new Scanner(System.in);
         players = new ArrayList<>();
-        int totalStartingDom = 0;
 
         System.out.println("Welcome to Mexican Train!");
         System.out.println("Up to 4 players can play with any mix of human and computer players.");
@@ -271,7 +287,7 @@ public class GameManager {
         }
 
         System.out.println("Please enter the number of human players:");
-        int numHumanPlayers = in.nextInt();
+        numHumanPlayers = in.nextInt();
         for (int i = 1; i <= numHumanPlayers; i++) {
             Player p = new Player("Player" + i, totalStartingDom);
             p.createHand(boneyard);
@@ -279,15 +295,40 @@ public class GameManager {
         }
 
         System.out.println("Please enter the number of computer players:");
-        int numComPlayers = in.nextInt();
+        numComPlayers = in.nextInt();
         for (int i = 1; i <= numComPlayers; i++) {
             Player p = new Player("Computer" + i, totalStartingDom);
             p.createHand(boneyard);
             p.setComputer();
             players.add(p);
         }
-        board = new Board(players, boneyard.centerNum);
+        board = new Board(players, centerNum);
         printGameState();
+    }
+    public void decrementCenterNum() {
+        centerNum--;
+    }
+
+    public void startNewRound() {
+        boneyard = new Boneyard(centerNum);
+        players = new ArrayList<>();
+        round++;
+        for (int i = 1; i <= numHumanPlayers; i++) {
+            Player p = new Player("Player" + i, totalStartingDom);
+            p.createHand(boneyard);
+            players.add(p);
+        }
+        for (int i = 1; i <= numComPlayers; i++) {
+            Player p = new Player("Computer" + i, totalStartingDom);
+            p.createHand(boneyard);
+            p.setComputer();
+            players.add(p);
+        }
+        decrementCenterNum();
+        board = new Board(players, centerNum);
+        printGameState();
+        roundOver = false;
+
     }
 
     public boolean checkIfDomDouble(Domino dom) {
@@ -298,6 +339,7 @@ public class GameManager {
     }
 
     public void printGameState() {
+        System.out.println("Round " + round);
         System.out.println("GameState:");
         System.out.println("Humans:");
         for(Player p : players){
@@ -329,10 +371,12 @@ public class GameManager {
         System.out.println("Boneyard:");
         boneyard.printBoneyard();
         System.out.println();
-        System.out.println("Current player:");
-        for(Player p : players){
-            if(p.getPlayerTurn()) {
-                System.out.println(p.getPlayerNum());
+        if(!roundOver) {
+            System.out.println("Current player:");
+            for(Player p : players){
+                if(p.getPlayerTurn()) {
+                    System.out.println(p.getPlayerNum());
+                }
             }
         }
         System.out.println("------------------------------------");

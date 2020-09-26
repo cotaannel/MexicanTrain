@@ -1,21 +1,30 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Boneyard {
     public ArrayList<Domino> boneyard;
-    public int centerNum = 9;
+    public int centerNum;
 
-    public Boneyard() {
+    public Boneyard(int centerNum) {
+        this.centerNum = centerNum;
         boneyard = new ArrayList<Domino>();
         createBoneyard();
     }
 
     public void createBoneyard() {
-        for(int i = 0; i <= 9; i++) {
+
+//        for(int i = 0; i <= 9; i++) {
+//            int j = i;
+//            while (j >= 0) {
+//                boneyard.add(new Domino(j,i));
+//                j--;
+//            }
+//        }
+
+        for(int i = 0; i <= 8; i++) {
             int j = i;
             while (j >= 0) {
-                boneyard.add(new Domino(j,i));
+                boneyard.add(new Domino(1,1));
                 j--;
             }
         }
@@ -41,6 +50,7 @@ public class Boneyard {
         return dom;
     }
 
+
     public void printBoneyard() {
         for(int i = 0; i < boneyard.size(); i++) {
             System.out.print(boneyard.get(i).toString() + " ");
@@ -48,4 +58,6 @@ public class Boneyard {
         System.out.println();
     }
 
+//    public boolean isEmpty() {
+//    }
 }
