@@ -1,16 +1,12 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
-
 import static java.lang.System.exit;
 
 public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
-    private ArrayList<Integer> finalScore = new ArrayList<>();
-    private boolean gameOver = false;
     private boolean roundOver = false;
     private boolean doublePlayed = false;
     private boolean doubleOpen = false;
@@ -28,9 +24,10 @@ public class GameManager {
     public GameManager() {
         boneyard = new Boneyard(centerNum);
         startGame();
+        boolean gameOver = false;
         while(!gameOver) {
             startTurn();
-            if(boneyard.boneyard.isEmpty()) {
+            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays()) {
                 System.out.println("Round " + round + " is over.");
                 getScore();
                 System.out.println("Scores:");
@@ -92,7 +89,7 @@ public class GameManager {
                 break;
             case "d":
                 //if there is a playable domino, cannot draw
-                if(checkPlayableSpots()) {
+                if(checkPlayableSpots(currentPlayer)) {
                     System.out.println("Cannot draw, there is a playable domino.");
                 } else {
                     // does not let them draw twice in a turn
@@ -109,7 +106,7 @@ public class GameManager {
                 break;
             case "s":
                 //have to fix, if double played, and cannot make another play, cannot skip until drawn
-                if(checkPlayableSpots()) {
+                if(checkPlayableSpots(currentPlayer)) {
                     //if there are playable spots, can't skip
                     System.out.println("Cannot skip, there is a playable domino.");
                 } else if(!currentPlayer.checkIfDrawn()) {
@@ -133,7 +130,16 @@ public class GameManager {
 
     }
 
-    public boolean checkPlayableSpots() {
+    public boolean checkIfNoMorePlays() {
+        for(Player p : players){
+            if(checkPlayableSpots(p)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkPlayableSpots(Player currentPlayer) {
         //goes through each dom in players hand
         for(int i = 0; i < currentPlayer.getHandSize(); i++) {
             Domino dom = currentPlayer.getDomino(i);
@@ -185,90 +191,156 @@ public class GameManager {
         } else {
             playTrain = players.get(train-1);
         }
-        if(!doubleOpen || currentPlayer.checkIfCanPlayNonDoubleTrain()) {
-            if(playTrain == mexTrain) {
-                Domino lastDom = mexTrain.getLastTrainDom();
+
+        if(playTrain == mexTrain) {
+            Domino lastDom = mexTrain.getLastTrainDom();
+            if(lastDom.getRightNum() == playDom.getLeftNum() ||
+                    lastDom.getRightNum() == playDom.getRightNum()) {
+                if(lastDom.getRightNum() != playDom.getLeftNum()) {
+                    playDom.rotateTile();
+                }
+                mexTrain.addDomToTrain(playDom);
+                currentPlayer.removeDomFromHand(playDom);
+                if(checkIfDomDouble(playDom)) {
+                    doubleDom = mexTrain;
+                    doublePlayed = true;
+                    System.out.println("Double played. Go again.");
+                    currentPlayer.makeTrueCanPlayNonDoubleTrain();
+                }
+
+            } else {
+                System.out.println("That domino cannot go on the Mexican Train.");
+                System.out.println("Please pick again.");
+                changeTurn = false;
+            }
+        } else {
+            //if a player train chosen
+            if(playTrain == currentPlayer || playTrain.getTrainState()) {
+                //checks if train is empty
+                Domino lastDom = playTrain.getLastTrainDom();
                 if(lastDom.getRightNum() == playDom.getLeftNum() ||
                         lastDom.getRightNum() == playDom.getRightNum()) {
-                    if(lastDom.getRightNum() != playDom.getLeftNum()) {
+                    if (lastDom.getRightNum() != playDom.getLeftNum()) {
                         playDom.rotateTile();
                     }
-                    mexTrain.addDomToTrain(playDom);
+                    playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
+                    currentPlayer.makeStateFalse();
+                    changeTurn = true;
                     if(checkIfDomDouble(playDom)) {
-                        doubleDom = mexTrain;
+                        doubleDom = playTrain;
                         doublePlayed = true;
                         System.out.println("Double played. Go again.");
                         currentPlayer.makeTrueCanPlayNonDoubleTrain();
                     }
-
                 } else {
-                    System.out.println("That domino cannot go on the Mexican Train.");
-                    System.out.println("Please pick again.");
+                    System.out.println("That domino does not match.");
                     changeTurn = false;
                 }
             } else {
-                //if a player train chosen
-                if(playTrain == currentPlayer || playTrain.getTrainState()) {
-                    //checks if train is empty
-                    if(playTrain.checkIfTrainEmpty()) {
-                        if(center.getRightNum() == playDom.getLeftNum()
-                                || center.getRightNum() == playDom.getRightNum()) {
-                            if(center.getRightNum() != playDom.getLeftNum()) {
-                                playDom.rotateTile();
-                            }
-                            playTrain.addDomToTrain(playDom);
-                            currentPlayer.removeDomFromHand(playDom);
-                            currentPlayer.makeStateFalse();
-                            playTrain.makeTrainNonempty();
-                            changeTurn = true;
-                            if(checkIfDomDouble(playDom)) {
-                                doubleDom = playTrain;
-                                doublePlayed = true;
-                                System.out.println("Double played. Go again.");
-                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
-                            }
-                        } else {
-                            System.out.println("This domino cannot go there. Try again.");
-                            changeTurn = false;
-                        }
-                    } else {
-                        //if train not empty
-                        Domino lastDom = playTrain.getLastTrainDom();
-                        if(lastDom.getRightNum() == playDom.getLeftNum() ||
-                                lastDom.getRightNum() == playDom.getRightNum()) {
-                            if (lastDom.getRightNum() != playDom.getLeftNum()) {
-                                playDom.rotateTile();
-                            }
-                            playTrain.addDomToTrain(playDom);
-                            currentPlayer.removeDomFromHand(playDom);
-                            currentPlayer.makeStateFalse();
-                            changeTurn = true;
-                            if(checkIfDomDouble(playDom)) {
-                                doubleDom = playTrain;
-                                doublePlayed = true;
-                                System.out.println("Double played. Go again.");
-                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
-                            }
-                        } else {
-                            System.out.println("That domino does not match.");
-                            changeTurn = false;
-                        }
-                    }
-                } else {
-                    System.out.println("This train is not playable. Try again.");
-                    changeTurn = false;
-                }
-            }
-        } else {
-            if(playTrain != doubleDom) {
-                System.out.println("There is a double open that needs to be played.");
+                System.out.println("This train is not playable. Try again.");
                 changeTurn = false;
-            } else {
-                doubleOpen = false;
-                checkIfLegal(dom,train);
             }
         }
+
+
+
+
+
+
+
+
+
+//        if(!doubleOpen || currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+//            if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+//                currentPlayer.makeFalseCanPlayNonDoubleTrain();
+//                doubleOpen = true;
+//            }
+//            if(playTrain == mexTrain) {
+//                Domino lastDom = mexTrain.getLastTrainDom();
+//                if(lastDom.getRightNum() == playDom.getLeftNum() ||
+//                        lastDom.getRightNum() == playDom.getRightNum()) {
+//                    if(lastDom.getRightNum() != playDom.getLeftNum()) {
+//                        playDom.rotateTile();
+//                    }
+//                    mexTrain.addDomToTrain(playDom);
+//                    currentPlayer.removeDomFromHand(playDom);
+//                    if(checkIfDomDouble(playDom)) {
+//                        doubleDom = mexTrain;
+//                        doublePlayed = true;
+//                        System.out.println("Double played. Go again.");
+//                        currentPlayer.makeTrueCanPlayNonDoubleTrain();
+//                    }
+//
+//                } else {
+//                    System.out.println("That domino cannot go on the Mexican Train.");
+//                    System.out.println("Please pick again.");
+//                    changeTurn = false;
+//                }
+//            } else {
+//                //if a player train chosen
+//                if(playTrain == currentPlayer || playTrain.getTrainState()) {
+//                    //checks if train is empty
+//                    if(playTrain.checkIfTrainEmpty()) {
+//                        if(center.getRightNum() == playDom.getLeftNum()
+//                                || center.getRightNum() == playDom.getRightNum()) {
+//                            if(center.getRightNum() != playDom.getLeftNum()) {
+//                                playDom.rotateTile();
+//                            }
+//                            playTrain.addDomToTrain(playDom);
+//                            currentPlayer.removeDomFromHand(playDom);
+//                            currentPlayer.makeStateFalse();
+//                            playTrain.makeTrainNonempty();
+//                            changeTurn = true;
+//                            if(checkIfDomDouble(playDom)) {
+//                                doubleDom = playTrain;
+//                                doublePlayed = true;
+//                                System.out.println("Double played. Go again.");
+//                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
+//                            }
+//                        } else {
+//                            System.out.println("This domino cannot go there. Try again.");
+//                            changeTurn = false;
+//                        }
+//                    } else {
+//                        //if train not empty
+//                        Domino lastDom = playTrain.getLastTrainDom();
+//                        if(lastDom.getRightNum() == playDom.getLeftNum() ||
+//                                lastDom.getRightNum() == playDom.getRightNum()) {
+//                            if (lastDom.getRightNum() != playDom.getLeftNum()) {
+//                                playDom.rotateTile();
+//                            }
+//                            playTrain.addDomToTrain(playDom);
+//                            currentPlayer.removeDomFromHand(playDom);
+//                            currentPlayer.makeStateFalse();
+//                            changeTurn = true;
+//                            if(checkIfDomDouble(playDom)) {
+//                                doubleDom = playTrain;
+//                                doublePlayed = true;
+//                                System.out.println("Double played. Go again.");
+//                                currentPlayer.makeTrueCanPlayNonDoubleTrain();
+//                            }
+//                        } else {
+//                            System.out.println("That domino does not match.");
+//                            changeTurn = false;
+//                        }
+//                    }
+//                } else {
+//                    System.out.println("This train is not playable. Try again.");
+//                    changeTurn = false;
+//                }
+//            }
+//        } else if(doubleOpen){
+////            System.out.println("There is a double open that needs to be played.");
+////            changeTurn = false;
+//            if(playTrain != doubleDom) {
+//                System.out.println("There is a double open that needs to be played.");
+//                changeTurn = false;
+//            } else {
+//                doubleOpen = false;
+//                checkIfLegal(dom,train);
+//            }
+//        }
 
         if (!doublePlayed) {
             if(changeTurn) {
@@ -278,12 +350,6 @@ public class GameManager {
             if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
                 currentPlayer.makeFalseCanPlayNonDoubleTrain();
                 System.out.println("There is a double open that needs to be closed");
-            }
-        }
-        if(doublePlayed) {
-            if(doubleDom != playTrain) {
-                doubleOpen = true;
-
             }
         }
         if(changeTurn) {

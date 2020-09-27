@@ -13,6 +13,9 @@ public class Board {
         mexTrain = new Player("Mexican Train",0);
         mexTrain.addDomToTrain(center);
         mexTrain.makeStateTrue();
+        for(Player p : players){
+            p.addDomToTrain(center);
+        }
         changePlayerTurn();
     }
 
@@ -42,6 +45,7 @@ public class Board {
     }
 
     public void printBoard() {
+        System.out.println("Center:" + center.toString());
         mexTrain.printTrain();
         for(Player p : players){
             p.printTrain();

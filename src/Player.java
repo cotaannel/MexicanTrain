@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Player {
     private String playerNum;
+    private Board board;
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
     private boolean trainState = false;
@@ -150,7 +151,7 @@ public class Player {
     }
     public void printTrain() {
         System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
-        for(int i = 0; i < train.size(); i++) {
+        for(int i = 1; i < train.size(); i++) {
             System.out.print(train.get(i).toString() + "  " );
         }
         System.out.println();
