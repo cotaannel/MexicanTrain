@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -7,6 +9,7 @@ public class GameManager {
     private Boneyard boneyard;
     private ArrayList<Player> players;
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
+    private ArrayList<Integer> finalScore = new ArrayList<>();
     private boolean gameOver = false;
     private boolean roundOver = false;
     private boolean doublePlayed = false;
@@ -16,7 +19,7 @@ public class GameManager {
     private Player currentPlayer = new Player();
     private Player doubleDom = new Player();
     private final Scanner in = new Scanner(System.in);
-    private int round = 1;
+    private int round = 9;
     private int numHumanPlayers;
     private int numComPlayers;
     private int totalStartingDom = 0;
@@ -25,7 +28,7 @@ public class GameManager {
     public GameManager() {
         boneyard = new Boneyard(centerNum);
         startGame();
-        while(!roundOver) {
+        while(!gameOver) {
             startTurn();
             if(boneyard.boneyard.isEmpty()) {
                 System.out.println("Round " + round + " is over.");
@@ -38,7 +41,12 @@ public class GameManager {
                 roundOver = true;
                 startNewRound();
             }
+            if(round > 10) {
+                gameOver = true;
+            }
         }
+        System.out.println("Game Over!");
+        System.out.println(getWinner().getPlayerNum() + " is the winner!");
         in.close();
     }
 
@@ -50,6 +58,10 @@ public class GameManager {
             scoreHolder.set(i, p.getScore());
             i++;
         }
+    }
+
+    public Player getWinner() {
+        return players.get(scoreHolder.indexOf(Collections.min(scoreHolder)));
     }
 
     public void getPlayerTurn() {
