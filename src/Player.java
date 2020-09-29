@@ -2,14 +2,12 @@ import java.util.ArrayList;
 
 public class Player {
     private String playerNum;
-    private Board board;
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
     private boolean trainState = false;
     private boolean isComputer = false;
     private boolean hasDrawn = false;
     private boolean playerTurn = false;
-    private boolean trainEmpty = true;
     private boolean canPlayNonDoubleTrain = false;
     private int startingDomNum;
     private int score = 0;
@@ -26,17 +24,12 @@ public class Player {
         train = new ArrayList<>();
     }
 
-    public boolean checkIfTrainEmpty() {
-        return trainEmpty;
-    }
-
-    public int calculateScore() {
+    public void calculateScore() {
 
         for(int i = 0; i < hand.size(); i++) {
             score += hand.get(i).getLeftNum();
             score += hand.get(i).getRightNum();
         }
-        return score;
     }
 
     public void updateScore(int score) {
@@ -69,10 +62,6 @@ public class Player {
 
     public boolean checkIfDrawn() {
         return hasDrawn;
-    }
-
-    public void makeTrainNonempty() {
-        trainEmpty = false;
     }
 
     public void makePlayerTurn() {
@@ -108,6 +97,10 @@ public class Player {
 
     public int getHandSize() {
         return hand.size();
+    }
+
+    public ArrayList getTrain() {
+        return train;
     }
 
     public boolean getTrainState() {
