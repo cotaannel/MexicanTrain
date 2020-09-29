@@ -99,10 +99,6 @@ public class Player {
         return hand.size();
     }
 
-    public ArrayList getTrain() {
-        return train;
-    }
-
     public boolean getTrainState() {
         return trainState;
     }
