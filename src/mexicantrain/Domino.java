@@ -1,3 +1,5 @@
+package mexicantrain;
+
 public class Domino {
     private int leftNum;
     private int rightNum;

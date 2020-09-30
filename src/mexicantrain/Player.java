@@ -1,3 +1,8 @@
+package mexicantrain;
+
+import mexicantrain.Boneyard;
+import mexicantrain.Domino;
+
 import java.util.ArrayList;
 
 public class Player {
@@ -97,6 +102,10 @@ public class Player {
 
     public int getHandSize() {
         return hand.size();
+    }
+
+    public ArrayList getTrain() {
+        return train;
     }
 
     public boolean getTrainState() {

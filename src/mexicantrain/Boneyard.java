@@ -1,3 +1,5 @@
+package mexicantrain;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,7 +26,7 @@ public class Boneyard {
 //        for(int i = 0; i <= 8; i++) {
 //            int j = i;
 //            while (j >= 0) {
-//                boneyard.add(new Domino(1,1));
+//                boneyard.add(new mexicantrain.Domino(j,i));
 //                j--;
 //            }
 //        }
