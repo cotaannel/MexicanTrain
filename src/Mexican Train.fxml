@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <children>
+      <HBox prefHeight="50.0" prefWidth="200.0">
+         <children>
+            <TextField fx:id="totalPlayers" onAction="#getTotalPlayers" prefHeight="27.0" prefWidth="204.0" promptText="Enter Total Number of Players" />
+            <TextField fx:id="humPlayers" onAction="#getHumPlayers" prefHeight="27.0" prefWidth="205.0" promptText="Enter Number of Human Players" />
+            <TextField fx:id="comPlayers" onAction="#getComPlayers" prefHeight="27.0" prefWidth="218.0" promptText="Enter Number of Computer Players" />
+            <Button mnemonicParsing="false" onAction="#startNewGame" prefHeight="27.0" prefWidth="114.0" text="Start Game" />
+         </children>
+      </HBox>
+      <HBox prefHeight="400.0" prefWidth="1000.0" />
+      <HBox prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="300.0">
+               <children>
+                  <Button mnemonicParsing="false" text="Draw Domino" />
+                  <Button mnemonicParsing="false" text="Skip" />
+               </children></VBox>
+            <VBox prefHeight="200.0" prefWidth="700.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="728.0" text="Current Player: ">
+                     <graphic>
+                        <Label fx:id="playerLabel" />
+                     </graphic>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

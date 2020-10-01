@@ -1,9 +1,3 @@
-package mexicantrain;
-
-import mexicantrain.Board;
-import mexicantrain.Boneyard;
-import mexicantrain.Domino;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -11,12 +5,14 @@ import static java.lang.System.exit;
 
 public class GameManager {
     private Boneyard boneyard;
+    private Rules rules;
     private ArrayList<Player> players;
-    private ArrayList<Integer> scoreHolder = new ArrayList<>();
+    public ArrayList<Integer> scoreHolder = new ArrayList<>();
     private boolean roundOver = false;
     private boolean doublePlayed = false;
     private boolean changeTurn = true;
     private Board board;
+    //private Controller controller;
     private Player currentPlayer = new Player();
     private Player doubleTrain = new Player();
     //private ArrayList<mexicantrain.Domino> doubleTrain = new ArrayList<>();
@@ -24,34 +20,45 @@ public class GameManager {
     private int round = 9;
     private int numHumanPlayers;
     private int numComPlayers;
-    private int totalStartingDom = 0;
+    public int totalStartingDom = 0;
     private int centerNum = 9;
     private int canPlay = 0;
 
-    public GameManager() {
-        boneyard = new Boneyard(centerNum);
-        startGame();
-        boolean gameOver = false;
-        while(!gameOver) {
-            startTurn();
-            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays()) {
-                System.out.println("Round " + round + " is over.");
-                getScore();
-                System.out.println("Scores:");
-                for(Player p : players){
-                    System.out.println(p.getPlayerNum() + ": " + p.getScore());
-                }
-                System.out.println();
-                roundOver = true;
-                startNewRound();
-            }
-            if(round > 10) {
-                gameOver = true;
-            }
+    private boolean consoleGame = false;
+
+    public GameManager(ArrayList players, ArrayList scoreHolder) {
+        if(consoleGame) {
+            boneyard = new Boneyard(centerNum);
+            startGame();
         }
-        System.out.println("Game Over!");
-        System.out.println(getWinner().getPlayerNum() + " is the winner!");
-        in.close();
+
+        boolean gameOver = false;
+//        while(!gameOver) {
+//            if(consoleGame) { startTurn(); }
+//            System.out.println(players);
+//            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays()) {
+//                getScore();
+//                if(consoleGame) {
+//                    System.out.println("Round " + round + " is over.");
+//                    System.out.println("Scores:");
+//                }
+////                for(Player p : players){
+////                    if(consoleGame) {System.out.println(p.getPlayerNum() + ": " + p.getScore());}
+////
+////                }
+//                System.out.println();
+//                roundOver = true;
+//                startNewRound();
+//            }
+//            if(round > 10) {
+//                gameOver = true;
+//            }
+//        }
+        if(consoleGame) {
+            System.out.println("Game Over!");
+            System.out.println(getWinner().getPlayerNum() + " is the winner!");
+            in.close();
+        }
     }
 
     public void getScore() {
@@ -297,7 +304,7 @@ public class GameManager {
 
                     currentPlayer.makeFalseCanPlayNonDoubleTrain();
                 }
-                if(checkIfDomDouble(playDom)) {
+                if(rules.checkIfDomDouble(playDom)) {
                     doubleTrain = mexTrain;
                     doublePlayed = true;
                     System.out.println("Double played. Go again.");
@@ -331,7 +338,7 @@ public class GameManager {
                         }
                         currentPlayer.makeFalseCanPlayNonDoubleTrain();
                     }
-                    if(checkIfDomDouble(playDom)) {
+                    if(rules.checkIfDomDouble(playDom)) {
                         doubleTrain = mexTrain;
                         doublePlayed = true;
                         System.out.println("Double played. Go again.");
@@ -386,7 +393,7 @@ public class GameManager {
         System.out.println("Please enter the number of human players:");
         numHumanPlayers = in.nextInt();
         for(int i = 1; i <= numHumanPlayers; i++) {
-            Player p = new Player("mexicantrain.Player" + i, totalStartingDom);
+            Player p = new Player("Player" + i, totalStartingDom);
             p.createHand(boneyard);
             players.add(p);
             scoreHolder.add(0);
@@ -430,11 +437,15 @@ public class GameManager {
 
     }
 
-    public boolean checkIfDomDouble(Domino dom) {
-        if(dom.getLeftNum() == dom.getRightNum()) {
-            return true;
-        }
-        return false;
+//    public boolean checkIfDomDouble(Domino dom) {
+//        if(dom.getLeftNum() == dom.getRightNum()) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+    public ArrayList getPLayers() {
+        return players;
     }
 
     public void printGameState() {

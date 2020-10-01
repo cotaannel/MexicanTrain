@@ -1,6 +1,3 @@
-package mexicantrain;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Board {
@@ -8,10 +5,11 @@ public class Board {
     private Player mexTrain;
     private int playerTurnInc = 0;
     private Domino center;
+    private String imagePath = "Dominos/" + center + "|" + center + ".png";
 
     public Board(ArrayList<Player> players, int n) {
         this.players = players;
-        center = new Domino(n,n);
+        center = new Domino(n,n,imagePath);
         mexTrain = new Player("Mexican Train",0);
         mexTrain.addDomToTrain(center);
         mexTrain.makeStateTrue();

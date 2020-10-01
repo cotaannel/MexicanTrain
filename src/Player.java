@@ -1,8 +1,3 @@
-package mexicantrain;
-
-import mexicantrain.Boneyard;
-import mexicantrain.Domino;
-
 import java.util.ArrayList;
 
 public class Player {
