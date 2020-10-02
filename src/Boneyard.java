@@ -40,9 +40,27 @@ public class Boneyard {
     }
 
     public void printBoneyard() {
-        for(int i = 0; i < boneyard.size(); i++) {
-            System.out.print(boneyard.get(i).toString() + " ");
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        for (int i = 0; i < boneyard.size(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp1.add(boneyard.get(i));
+            }
+            else {
+                temp2.add(boneyard.get(i));
+            }
+        }
+
+        for(int i = 0; i < temp1.size(); i++) {
+            System.out.print(temp1.get(i).toString() + " ");
         }
         System.out.println();
+        System.out.print("   ");
+        for(int i = 0; i < temp2.size(); i++) {
+            System.out.print(temp2.get(i).toString() + " ");
+        }
+        System.out.println();
+
+
     }
 }

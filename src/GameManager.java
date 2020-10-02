@@ -56,7 +56,6 @@ public class GameManager {
     }
 
     public boolean checkIfDoubleOpen() {
-        mexTrain.printTrain();
         if(checkIfDomDouble(mexTrain.getLastTrainDom())) {
             return true;
         }
@@ -214,8 +213,6 @@ public class GameManager {
         System.out.println("Which train?");
         System.out.println("For Mexican Train:0, Rest of Players as shown:1,2,3,4 & so on.");
         int trainChoice = in.nextInt();
-        mexTrain.printTrain();
-        currentPlayer.printTrain();
         if(!checkIfDoubleOpen()) {
             checkIfLegal(domChoice, trainChoice);
         } else {

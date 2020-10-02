@@ -50,9 +50,24 @@ public class Player {
         System.out.println();
     }
     public void printTrain() {
-        System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
-        for(int i = 1; i < train.size(); i++) {
-            System.out.print(train.get(i).toString() + "  " );
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        for (int i = 1; i < train.size(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(train.get(i));
+            }
+            else {
+                temp1.add(train.get(i));
+            }
+        }
+        System.out.println(getPlayerNum() + ": ");
+        for(int i = 0; i < temp1.size(); i++) {
+            System.out.print(temp1.get(i).toString() + " ");
+        }
+        System.out.println();
+        System.out.print("   ");
+        for(int i = 0; i < temp2.size(); i++) {
+            System.out.print(temp2.get(i).toString() + " ");
         }
         System.out.println();
     }
