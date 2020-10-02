@@ -394,6 +394,7 @@ public class GameManager {
         }
         board = new Board(players, centerNum,boneyard);
         mexTrain = board.getMexTrain();
+
         printGameState();
     }
     public void decrementCenterNum() {
@@ -428,15 +429,19 @@ public class GameManager {
     }
 
     public void printGameState() {
+        getPlayerTurn();
         System.out.println("Round " + round);
         System.out.println("GameState:");
         System.out.println("Humans:");
         for(Player p : players){
             if(!p.checkIfComputer()) {
-                p.printHand();
-                //adds labels to dominoes: 1,2,3,...
-                for(int i = 1; i < (p.getHandSize()+1); i++) {
-                    System.out.print(i + "      ");
+                System.out.println(p.getPlayerNum() + ": ");
+                if(p == currentPlayer) {
+                    p.printHand();
+                    //adds labels to dominoes: 1,2,3,...
+                    for(int i = 1; i < (p.getHandSize()+1); i++) {
+                        System.out.print(i + "      ");
+                    }
                 }
                 System.out.println();
             }
@@ -445,10 +450,13 @@ public class GameManager {
         System.out.println("Computers:");
         for(Player p : players){
             if(p.checkIfComputer()) {
-                p.printHand();
-                //adds labels to dominoes: 1,2,3,...
-                for(int i = 1; i < (p.getHandSize()+1); i++) {
-                    System.out.print(i + "      ");
+                System.out.println(p.getPlayerNum() + ": ");
+                if(p == currentPlayer) {
+                    p.printHand();
+                    //adds labels to dominoes: 1,2,3,...
+                    for(int i = 1; i < (p.getHandSize()+1); i++) {
+                        System.out.print(i + "      ");
+                    }
                 }
                 System.out.println();
             }

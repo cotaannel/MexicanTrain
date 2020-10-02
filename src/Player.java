@@ -43,7 +43,6 @@ public class Player {
     }
 
     public void printHand() {
-        System.out.println(getPlayerNum() + ": ");
         for(int i = 0; i < hand.size(); i++) {
             System.out.print(hand.get(i).toString() + "  " );
         }
