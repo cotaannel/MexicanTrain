@@ -123,6 +123,7 @@ public class Player {
     }
 
     public void createHand(Boneyard by) {
+        //this.addDomToHand(new Domino(0, by.centerNum, null));
         for (int i = 0; i < startingDomNum; i++) {
             this.addDomToHand(by.drawDom());
         }
