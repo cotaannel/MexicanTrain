@@ -25,7 +25,6 @@ public class Player {
     }
 
     public void calculateScore() {
-
         for(int i = 0; i < hand.size(); i++) {
             score += hand.get(i).getLeftNum();
             score += hand.get(i).getRightNum();
@@ -34,7 +33,28 @@ public class Player {
 
     public void updateScore(int score) {
         this.score = score;
+    }
 
+    public void createHand(Boneyard by) {
+        //this.addDomToHand(new Domino(0, by.centerNum, null));
+        for (int i = 0; i < startingDomNum; i++) {
+            this.addDomToHand(by.drawDom());
+        }
+    }
+
+    public void printHand() {
+        System.out.println(getPlayerNum() + ": ");
+        for(int i = 0; i < hand.size(); i++) {
+            System.out.print(hand.get(i).toString() + "  " );
+        }
+        System.out.println();
+    }
+    public void printTrain() {
+        System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
+        for(int i = 1; i < train.size(); i++) {
+            System.out.print(train.get(i).toString() + "  " );
+        }
+        System.out.println();
     }
 
     public int getScore() {
@@ -48,6 +68,7 @@ public class Player {
     public void makeHasDrawnFalse() {
         hasDrawn = false;
     }
+
     public boolean checkIfCanPlayNonDoubleTrain() {
         return canPlayNonDoubleTrain;
     }
@@ -67,6 +88,7 @@ public class Player {
     public void makePlayerTurn() {
         playerTurn = true;
     }
+
     public void makePlayerTurnFalse() {
         playerTurn = false;
     }
@@ -99,13 +121,10 @@ public class Player {
         return hand.size();
     }
 
-    public ArrayList getTrain() {
-        return train;
-    }
-
     public boolean getTrainState() {
         return trainState;
     }
+
     public void makeStateTrue() {
         trainState = true;
     }
@@ -122,32 +141,9 @@ public class Player {
         hand.remove(dom);
     }
 
-    public void createHand(Boneyard by) {
-        //this.addDomToHand(new Domino(0, by.centerNum, null));
-        for (int i = 0; i < startingDomNum; i++) {
-            this.addDomToHand(by.drawDom());
-        }
-    }
-
     public Domino getDomino(int i) {
         return hand.get(i);
     }
-    public Domino getLastTrainDom() {
-        return train.get(train.size()-1);
-    }
 
-    public void printHand() {
-        System.out.println(getPlayerNum() + ": ");
-        for(int i = 0; i < hand.size(); i++) {
-            System.out.print(hand.get(i).toString() + "  " );
-        }
-        System.out.println();
-    }
-    public void printTrain() {
-        System.out.println(getPlayerNum() + "(" + getTrainState() + ")" + ": ");
-        for(int i = 1; i < train.size(); i++) {
-            System.out.print(train.get(i).toString() + "  " );
-        }
-        System.out.println();
-    }
+    public Domino getLastTrainDom() { return train.get(train.size()-1); }
 }

@@ -8,7 +8,6 @@ public class GameManager {
     private ArrayList<Player> players;
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private boolean roundOver = false;
-
     private boolean changeTurn = true;
     private Board board;
     private Player currentPlayer = new Player();
@@ -230,7 +229,6 @@ public class GameManager {
 
     public void checkIfLegalDoubleOpen(int dom, int train) {
         Domino playDom = currentPlayer.getDomino(dom-1);
-
         Player trainDouble = getOpenDoubleTrain();
         Player playTrain;
         if(train == 0) {

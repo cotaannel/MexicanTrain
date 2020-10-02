@@ -1,16 +1,10 @@
 public class Domino {
     private int leftNum;
     private int rightNum;
-    private String imagePath;
 
-    public Domino(int leftNum, int rightNum, String imagePath) {
+    public Domino(int leftNum, int rightNum) {
         this.leftNum = leftNum;
         this.rightNum = rightNum;
-        this.imagePath = imagePath;
-    }
-
-    public String getDomImage() {
-        return imagePath;
     }
 
     public int getLeftNum() {

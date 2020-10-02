@@ -5,25 +5,22 @@ public class Board {
     private Player mexTrain;
     private int playerTurnInc = 0;
     private Domino center;
-    private String imagePath = "Dominos/" + center + "|" + center + ".png";
 
     public Board(ArrayList<Player> players, int n, Boneyard by) {
         this.players = players;
-        center = new Domino(n,n,imagePath);
+        center = new Domino(n,n);
         mexTrain = new Player("Mexican Train",0);
-        mexTrain.addDomToTrain(new Domino(0, by.centerNum, imagePath));
+        mexTrain.addDomToTrain(new Domino(0, by.centerNum));
         mexTrain.makeStateTrue();
         for(Player p : players){
-            p.addDomToTrain(new Domino(0, by.centerNum, imagePath));
+            p.addDomToTrain(new Domino(0, by.centerNum));
         }
         changePlayerTurn();
     }
 
-
     public Player getMexTrain() {
         return mexTrain;
     }
-
 
     public void changePlayerTurn() {
         for(Player p : players){
