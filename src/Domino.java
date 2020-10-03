@@ -21,6 +21,10 @@ public class Domino {
         this.rightNum = firstNum;
     }
 
+    public int getPipTotal(Domino dom) {
+        return leftNum + rightNum;
+    }
+
     //print dominoes in form [0|0]
     public String toString() {
         return "[" + leftNum + "|" + rightNum + "]";

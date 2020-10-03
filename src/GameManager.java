@@ -24,7 +24,12 @@ public class GameManager {
         startGame();
         boolean gameOver = false;
         while(!gameOver) {
-            startTurn();
+            if(!currentPlayer.checkIfComputer()) {
+                startTurn();
+            } else {
+
+            }
+
             if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays()) {
                 System.out.println("Round " + round + " is over.");
                 getScore();
@@ -478,4 +483,35 @@ public class GameManager {
         }
         System.out.println("------------------------------------");
     }
+
+    public void setComCombo() {
+        for(Player p : players) {
+            if (p.checkIfComputer()) {
+                ArrayList<Domino> tempMatches = new ArrayList<>();
+                for(int i = 0; i < p.getHandSize(); i++) {
+                    Domino dom = currentPlayer.getDomino(i);
+                    if(checkIfDomMatches(p.getLastComboDom(), dom)) {
+                        tempMatches.add(dom);
+                        //p.removeDomFromHand(dom);
+                    }
+                }
+                Domino dom = organizeComCombo(tempMatches);
+                p.addDomToCombo(dom);
+                p.removeRandomDomFromHand(dom);
+            }
+        }
+    }
+
+
+    public Domino organizeComCombo(ArrayList temp) {
+        ArrayList<Integer> scoreTemp = new ArrayList<>();
+        for(int i = 0; i < temp.size(); i++) {
+            Domino dom = (Domino) temp.get(i);
+            int s = dom.getPipTotal(dom);
+            scoreTemp.add(s);
+        }
+        return (Domino) temp.get(Collections.max(scoreTemp));
+    }
+
+
 }

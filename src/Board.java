@@ -14,6 +14,7 @@ public class Board {
         mexTrain.makeStateTrue();
         for(Player p : players){
             p.addDomToTrain(new Domino(0, by.centerNum));
+            p.addDomToCombo(new Domino(0, by.centerNum));
         }
         changePlayerTurn();
     }

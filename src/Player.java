@@ -4,6 +4,8 @@ public class Player {
     private String playerNum;
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
+    private ArrayList<Domino> comCombo;
+    private ArrayList<Domino> comNotCombo;
     private boolean trainState = false;
     private boolean isComputer = false;
     private boolean hasDrawn = false;
@@ -160,4 +162,19 @@ public class Player {
     }
 
     public Domino getLastTrainDom() { return train.get(train.size()-1); }
+
+    public ArrayList<Domino> getComputerCombo() { return comCombo; }
+
+    public void addDomToCombo(Domino dom) {
+        comCombo.add(dom);
+    }
+    public Domino getLastComboDom() { return comCombo.get(comCombo.size()-1); }
+
+    public void removeRandomDomFromHand(Domino dom) {
+        for(int i = 0; i < hand.size(); i++) {
+            if(dom == hand.get(i)) {
+                hand.remove(i);
+            }
+        }
+    }
 }
