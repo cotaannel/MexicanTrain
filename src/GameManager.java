@@ -99,7 +99,11 @@ public class GameManager {
     public void startTurn() {
         getPlayerTurn();
         if(currentPlayer.checkIfComputer()) {
-            getComputerMove(currentPlayer);
+            if(checkIfDoubleOpen()) {
+                getComputerMoveDouble(currentPlayer);
+            } else {
+                getComputerMove(currentPlayer);
+            }
         }
         System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
         System.out.println("[p] play domino");
@@ -171,9 +175,7 @@ public class GameManager {
         } else {
             //no playable spots & has drawn
             //makes current player's train true
-            if(currentPlayer.checkIfDrawn()) {
-                currentPlayer.makeStateTrue();
-            }
+            System.out.println(currentPlayer.getPlayerNum() + " has skipped.");
             board.changePlayerTurn();
             currentPlayer.makeStateTrue();
             printGameState();
@@ -496,8 +498,18 @@ public class GameManager {
     public void getComputerMove(Player p) {
         if(checkPlayableSpots(p)) {
             getComPlay(p);
-
-            //add method when double is open
+        } else {
+            if(!p.checkIfDrawn()) {
+                checkIfCanDraw();
+                //getComputerMove();
+            } else {
+                checkIfCanSkip();
+            }
+        }
+    }
+    public void getComputerMoveDouble(Player p) {
+        if(checkPlayableSpotsOpenDouble(p)) {
+            getComPlayDouble(p);
         } else {
             if(!p.checkIfDrawn()) {
                 checkIfCanDraw();
@@ -510,6 +522,8 @@ public class GameManager {
 
     //checks to see which domino matches computers train and which of those
     //that match have the highest points
+
+    // check if double
     public void getComPlay(Player p) {
         boolean played = false;
         System.out.println("getcomplay");
@@ -555,8 +569,30 @@ public class GameManager {
             }
         }
 
+    }
 
+    //checks to see which domino matches computers train and which of those
+    //that match have the highest points
+    public void getComPlayDouble(Player p) {
+        Player player = getOpenDoubleTrain();
+        ArrayList<Domino> tempMatches = new ArrayList<>();
+        for(int i = 0; i < p.getHandSize(); i++) {
+            Domino dom = currentPlayer.getDomino(i);
+            if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                tempMatches.add(dom);
+            }
 
+        }
+        Domino dom = organizeComCombo(tempMatches);
+        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+            if(checkRotation(player.getLastTrainDom(), dom)) {
+                dom.rotateTile();
+            }
+            player.addDomToTrain(dom);
+            board.changePlayerTurn();
+            p.removeRandomDomFromHand(dom);
+            printGameState();
+        }
     }
 
 
