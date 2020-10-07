@@ -8,8 +8,8 @@ public class Board {
 
     public Board(ArrayList<Player> players, int n, Boneyard by) {
         this.players = players;
-        String imagePath = "dominoes/" + n + "|" + n + ".png";
-        String imagePath2 = "dominoes/" + 0 + "|" + n + ".png";
+        String imagePath = "mexicantrain/Resources/dominoes/" + n + "|" + n + ".png";
+        String imagePath2 = "mexicantrain/Resources/dominoes/" + 0 + "|" + n + ".png";
         center = new Domino(n,n,imagePath);
         mexTrain = new Player("Mexican Train",0);
         mexTrain.addDomToTrain(new Domino(0, by.centerNum,imagePath2));
