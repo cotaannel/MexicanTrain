@@ -24,6 +24,7 @@ public class GameManager {
     private Values values;
 
     public GameManager() {
+        values = Main.getValues();
         this.console = values.checkIfConsole();
         startGame();
         boolean gameOver = false;
