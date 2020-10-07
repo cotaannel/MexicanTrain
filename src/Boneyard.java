@@ -4,6 +4,7 @@ import java.util.Collections;
 public class Boneyard {
     public ArrayList<Domino> boneyard;
     public int centerNum;
+    private String imagePath = "dominoes/" + centerNum + "|" + centerNum + ".png";
 
     public Boneyard(int centerNum) {
         this.centerNum = centerNum;
@@ -17,7 +18,7 @@ public class Boneyard {
                 int j = i;
                 while (j >= 0) {
                     String imagePath = "dominoes/" + j + "|" + i + ".png";
-                    boneyard.add(new Domino(j,i));
+                    boneyard.add(new Domino(j,i,imagePath));
                     j--;
                 }
             }
@@ -28,7 +29,7 @@ public class Boneyard {
                 int j = i;
                 while (j >= 0) {
                     String imagePath = "dominoes/" + j + "|" + i + ".png";
-                    boneyard.add(new Domino(j,i));
+                    boneyard.add(new Domino(j,i,imagePath));
                     j--;
                 }
             }
@@ -36,7 +37,7 @@ public class Boneyard {
 
 
         //removes the center domino from boneyard
-        Domino dom = new Domino(centerNum,centerNum);
+        Domino dom = new Domino(centerNum,centerNum,imagePath);
         for(int i = 0; i < boneyard.size(); i++) {
             Domino test = boneyard.get(i);
             if(test.getLeftNum() == dom.getLeftNum() && test.getRightNum() == test.getRightNum()) {

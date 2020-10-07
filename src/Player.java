@@ -136,6 +136,9 @@ public class Player {
     public int getHandSize() {
         return hand.size();
     }
+    public int getTrainSize() {
+        return train.size();
+    }
 
     public boolean getTrainState() {
         return trainState;
@@ -159,6 +162,9 @@ public class Player {
 
     public Domino getDomino(int i) {
         return hand.get(i);
+    }
+    public Domino getTrainDomino(int i) {
+        return train.get(i);
     }
 
     public Domino getLastTrainDom() { return train.get(train.size()-1); }

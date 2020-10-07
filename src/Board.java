@@ -8,17 +8,22 @@ public class Board {
 
     public Board(ArrayList<Player> players, int n, Boneyard by) {
         this.players = players;
-        center = new Domino(n,n);
+        String imagePath = "dominoes/" + n + "|" + n + ".png";
+        String imagePath2 = "dominoes/" + 0 + "|" + n + ".png";
+        center = new Domino(n,n,imagePath);
         mexTrain = new Player("Mexican Train",0);
-        mexTrain.addDomToTrain(new Domino(0, by.centerNum));
+        mexTrain.addDomToTrain(new Domino(0, by.centerNum,imagePath2));
         mexTrain.makeStateTrue();
         for(Player p : players){
-            p.addDomToTrain(new Domino(0, by.centerNum));
-            p.addDomToCombo(new Domino(0, by.centerNum));
+            p.addDomToTrain(new Domino(0, by.centerNum,imagePath2));
+            p.addDomToCombo(new Domino(0, by.centerNum,imagePath2));
         }
         changePlayerTurn();
     }
 
+    public Domino getCenter() {
+        return center;
+    }
     public Player getMexTrain() {
         return mexTrain;
     }
