@@ -4,7 +4,7 @@ public class Player {
     private String playerNum;
     private ArrayList<Domino> hand;
     private ArrayList<Domino> train;
-    private ArrayList<Domino> comCombo;
+    private ArrayList<Domino> comCombo = new ArrayList<>();
     private ArrayList<Domino> comNotCombo;
     private boolean trainState = false;
     private boolean isComputer = false;
@@ -61,7 +61,7 @@ public class Player {
                 temp1.add(train.get(i));
             }
         }
-        System.out.println(getPlayerNum() + ": ");
+        System.out.println(getPlayerNum() + "("+getTrainState()+"):");
         for(int i = 0; i < temp1.size(); i++) {
             System.out.print(temp1.get(i).toString() + " ");
         }
