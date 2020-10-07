@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIController">
+    <children>
+        <TextField fx:id="totalPlayersText" alignment="CENTER" layoutX="425.0" layoutY="248.0" onAction="#getTotalPlayers" />
+        <Label alignment="CENTER" layoutX="423.0" layoutY="231.0" prefHeight="17.0" prefWidth="161.0" text="Total Number of Players" />
+        <Label alignment="CENTER" layoutX="346.0" layoutY="51.0" prefHeight="56.0" prefWidth="311.0" text="Mexican Train">
+            <font>
+                <Font name="Times Roman" size="36.0" />
+            </font>
+        </Label>
+        <Label alignment="CENTER" layoutX="405.0" layoutY="119.0" prefHeight="65.0" prefWidth="197.0" text="There can be a total of 4 players&#10;with any combo of human players&#10;and computer players" textAlignment="CENTER" />
+        <Label layoutX="417.0" layoutY="306.0" text="Total Number of Human Players" />
+        <Label layoutX="411.0" layoutY="390.0" text="Total Number of Computer Players" />
+        <TextField fx:id="humPlayersText" alignment="CENTER" layoutX="423.0" layoutY="323.0" onAction="#getHumPlayers" />
+        <TextField fx:id="comPlayersText" alignment="CENTER" layoutX="424.0" layoutY="407.0" onAction="#getComPlayers" />
+        <Button fx:id="closeButton" layoutX="456.0" layoutY="471.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="37.0" prefWidth="95.0" text="Start Game" />
+        <Label layoutX="399.0" layoutY="196.0" text="Press enter after entering each amount." />
+    </children>
+</AnchorPane>
