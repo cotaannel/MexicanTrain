@@ -18,10 +18,9 @@ public class GameManager {
     private int numHumanPlayers;
     private int numComPlayers;
     private int totalStartingDom = 0;
-    private int centerNum = 9;
+    private int centerNum;
 
     public GameManager() {
-        boneyard = new Boneyard(centerNum);
         startGame();
         boolean gameOver = false;
         while(!gameOver) {
@@ -377,8 +376,13 @@ public class GameManager {
 
         Scanner in = new Scanner(System.in);
         System.out.println("Welcome to Mexican Train!");
-        System.out.println("Up to 4 players can play with any mix of human and computer players.");
+        System.out.println("Up to 8 players can play with any mix of human and computer players.");
+        System.out.println("Please enter 12 to play with double-12 set. (Only for 8 players or less)" +
+                " Or enter 9 to play with double-9. (Only for 4 players or less");
+        centerNum = in.nextInt();
+        boneyard = new Boneyard(centerNum);
         System.out.println("Please enter the TOTAL number of players:");
+        boneyard = new Boneyard(centerNum);
         totalPlayers = in.nextInt();
         System.out.println("Please enter the number of human players:");
         numHumanPlayers = in.nextInt();
@@ -386,12 +390,31 @@ public class GameManager {
         numComPlayers = in.nextInt();
 
         //changes starting number of dominoes depending on number of players
-        if(totalPlayers == 4) {
-            totalStartingDom = 10;
-        } else if(totalPlayers == 3) {
-            totalStartingDom = 13;
-        } else if(totalPlayers == 2) {
-            totalStartingDom = 15;
+        if(centerNum == 12) {
+            if(totalPlayers == 8) {
+                totalStartingDom = 9;
+            } else if(totalPlayers == 7) {
+                totalStartingDom = 10;
+            } else if(totalPlayers == 6) {
+                totalStartingDom = 12;
+            } else if(totalPlayers == 5) {
+                totalStartingDom = 14;
+            } else if(totalPlayers == 4) {
+                totalStartingDom = 15;
+            } else if(totalPlayers == 3) {
+                totalStartingDom = 16;
+            } else if(totalPlayers == 2) {
+                totalStartingDom = 16;
+            }
+        }
+        if(centerNum == 9) {
+            if(totalPlayers == 4) {
+                totalStartingDom = 10;
+            } else if(totalPlayers == 3) {
+                totalStartingDom = 13;
+            } else if(totalPlayers == 2) {
+                totalStartingDom = 15;
+            }
         }
 
         for(int i = 1; i <= numHumanPlayers; i++) {
@@ -550,7 +573,9 @@ public class GameManager {
                         dom.rotateTile();
                     }
                     player.addDomToTrain(dom);
-                    board.changePlayerTurn();
+                    if(!checkIfDomDouble(dom)) {
+                        board.changePlayerTurn();
+                    }
                     p.removeRandomDomFromHand(dom);
                     printGameState();
                     played = true;
@@ -563,7 +588,9 @@ public class GameManager {
                     dom.rotateTile();
                 }
                 mexTrain.addDomToTrain(dom);
-                board.changePlayerTurn();
+                if(!checkIfDomDouble(dom)) {
+                    board.changePlayerTurn();
+                }
                 p.removeRandomDomFromHand(dom);
                 printGameState();
             }

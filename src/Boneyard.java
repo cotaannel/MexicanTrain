@@ -12,14 +12,28 @@ public class Boneyard {
     }
 
     public void createBoneyard() {
-        for(int i = 0; i <= 9; i++) {
-            int j = i;
-            while (j >= 0) {
-                String imagePath = "dominoes/" + j + "|" + i + ".png";
-                boneyard.add(new Domino(j,i));
-                j--;
+        if(centerNum == 9) {
+            for(int i = 0; i <= 9; i++) {
+                int j = i;
+                while (j >= 0) {
+                    String imagePath = "dominoes/" + j + "|" + i + ".png";
+                    boneyard.add(new Domino(j,i));
+                    j--;
+                }
             }
         }
+
+        if(centerNum == 12) {
+            for(int i = 0; i <= 12; i++) {
+                int j = i;
+                while (j >= 0) {
+                    String imagePath = "dominoes/" + j + "|" + i + ".png";
+                    boneyard.add(new Domino(j,i));
+                    j--;
+                }
+            }
+        }
+
 
         //removes the center domino from boneyard
         Domino dom = new Domino(centerNum,centerNum);
