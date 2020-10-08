@@ -4,7 +4,7 @@ import java.util.Collections;
 public class Boneyard {
     public ArrayList<Domino> boneyard;
     public int centerNum;
-    private String imagePath = "mexicantrain/Resources/dominoes/" + centerNum + "|" + centerNum + ".png";
+    private String imagePath = "Resources/dominoes/" + centerNum + "|" + centerNum + ".png";
 
     public Boneyard(int centerNum) {
         this.centerNum = centerNum;
@@ -17,7 +17,7 @@ public class Boneyard {
             for(int i = 0; i <= 9; i++) {
                 int j = i;
                 while (j >= 0) {
-                    String imagePath = "mexicantrain/Resources/dominoes/" + j + "|" + i + ".png";
+                    String imagePath = "Resources/dominoes/" + j + "|" + i + ".png";
                     boneyard.add(new Domino(j,i,imagePath));
                     j--;
                 }
@@ -28,7 +28,7 @@ public class Boneyard {
             for(int i = 0; i <= 12; i++) {
                 int j = i;
                 while (j >= 0) {
-                    String imagePath = "mexicantrain/Resources/dominoes/" + j + "|" + i + ".png";
+                    String imagePath = "Resources/dominoes/" + j + "|" + i + ".png";
                     boneyard.add(new Domino(j,i,imagePath));
                     j--;
                 }
