@@ -14,14 +14,14 @@ public class GameManager {
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private ArrayList<ImageView> imageStack;
-    private boolean printAllPlayersHands = false;
+    private boolean printAllPlayersHands = true;
     private boolean roundOver = false;
     private boolean changeTurn = true;
     private Board board;
     private Player currentPlayer = new Player();
     private Player mexTrain = new Player();
     private final Scanner in = new Scanner(System.in);
-    private int round = 9;
+    private int round = 0;
     private int totalPlayers;
     private int numHumanPlayers;
     private int numComPlayers;
@@ -33,131 +33,6 @@ public class GameManager {
     private boolean console;
     private Values values;
 
-    public void updateComponents(Label currentPlayerLbl, HBox playerHand) {
-        getPlayerTurn();
-        currentPlayerLbl.setText("Current Player: " + currentPlayer.getPlayerNum());
-        updatePlayerHand(playerHand);
-    }
-
-    public void updateBoard(HBox center, VBox p1, HBox p2, VBox p3, VBox p4, HBox mexTrainBox,
-                            Label p1Label, Label p2Label, Label p3Label, Label p4Label, Label mexTrainLabel,
-                            Button mexTrainButton, Button p1Button, Button p2Button, Button p3Button, Button p4Button) {
-        updateCenter(center);
-        updateMexTrain(mexTrainBox, mexTrain, mexTrainLabel);
-        mexTrainButton.setText("Play on Mexican Train");
-        if(totalPlayers == 2) {
-            updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
-            updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
-        } else if(totalPlayers == 3) {
-            updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
-            updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
-            updateTrain3(p3, players.get(2), p3Label);
-            p3Button.setText("Play on P3 Train");
-        } else if(totalPlayers == 4) {
-            updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
-            updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
-            updateTrain3(p3, players.get(2), p3Label);
-            p3Button.setText("Play on P3 Train");
-            updateTrain4(p4, players.get(3), p4Label);
-            p4Button.setText("Play on P4 Train");
-        }
-    }
-
-    public void updateTrain1(VBox p1, Player player1, Label p1Label) {
-        p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p1.getChildren().clear();
-        for(int i = 0; i < player1.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player1.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate()+90);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        p1.getChildren().addAll(imageStack);
-    }
-    public void updateTrain2(HBox p2, Player player2, Label p2Label) {
-        p2Label.setText(player2.getPlayerNum() + " Train" + "(" + player2.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p2.getChildren().clear();
-        for(int i = 0; i < player2.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player2.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate());
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        p2.getChildren().addAll(imageStack);
-    }
-    public void updateTrain3(VBox p3, Player player3, Label p3Label) {
-        p3Label.setText(player3.getPlayerNum() + " Train" + "(" + player3.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p3.getChildren().clear();
-        for(int i = 0; i < player3.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player3.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 180);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        p3.getChildren().addAll(imageStack);
-    }
-    public void updateTrain4(VBox p4, Player player4, Label p4Label) {
-        p4Label.setText(player4.getPlayerNum() + " Train" + "(" + player4.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p4.getChildren().clear();
-        for(int i = 0; i < player4.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player4.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 74.1);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        p4.getChildren().addAll(imageStack);
-    }
-    public void updateMexTrain(HBox mexTrainBox, Player mexTrain, Label mexTrainLabel) {
-        mexTrainLabel.setText(mexTrain.getPlayerNum() + "(" + mexTrain.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        mexTrainBox.getChildren().clear();
-        for(int i = 0; i < mexTrain.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(mexTrain.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate());// + 118);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        mexTrainBox.getChildren().addAll(imageStack);
-    }
-
-    public void updateCenter(HBox center) {
-        center.getChildren().clear();
-        ImageView currentImageView = new ImageView();
-        Image currentDominoImage = new Image(board.getCenter().getDomImage(),60,40,true,true);
-        currentImageView.setImage(currentDominoImage);
-        center.getChildren().addAll(currentImageView);
-
-    }
-
-    public void updatePlayerHand(HBox playerHands) {
-        playerHands.getChildren().clear();
-        imageStack.clear();
-        for(int i = 0; i < currentPlayer.getHandSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(currentPlayer.getDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
-        }
-        playerHands.getChildren().addAll(imageStack);
-
-    }
-
-    //change round number dependning on players #
     public GameManager() {
         values = Main.getValues();
         this.console = values.checkIfConsole();
@@ -171,7 +46,7 @@ public class GameManager {
             while(!gameOver) {
                 startTurn();
 
-                if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays()) {
+                if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
                     System.out.println("Round " + round + " is over.");
                     getScore();
                     System.out.println("Scores:");
@@ -182,14 +57,30 @@ public class GameManager {
                     roundOver = true;
                     startNewRound();
                 }
-                if(round > 10) {
-                    gameOver = true;
+                if(centerNum == 12) {
+                    if(round > 13) {
+                        gameOver = true;
+                    }
+                }
+                if(centerNum == 9) {
+                    if(round > 10) {
+                        gameOver = true;
+                    }
                 }
             }
             System.out.println("Game Over!");
             System.out.println(getWinner().getPlayerNum() + " is the winner!");
             in.close();
         }
+    }
+
+    public boolean checkIfPlayersHandEmpty() {
+        for(Player p : players) {
+            if(p.getHandSize() == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getScore() {
@@ -236,37 +127,6 @@ public class GameManager {
                 currentPlayer = p;
             }
         }
-    }
-
-    public void startTurn() {
-        getPlayerTurn();
-        if(currentPlayer.checkIfComputer()) {
-            if(checkIfDoubleOpen()) {
-                getComputerMoveDouble(currentPlayer);
-            } else {
-                getComputerMove(currentPlayer);
-            }
-        }
-        System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
-        System.out.println("[p] play domino");
-        System.out.println("[d] draw from boneyard");
-        System.out.println("[s] skip turn");
-        System.out.println("[q] quit");
-        String playerOption = in.nextLine();
-        switch (playerOption) {
-            case "p":
-                playDominoSetup();
-                break;
-            case "d":
-                checkIfCanDraw();
-                break;
-            case "s":
-                checkIfCanSkip();
-                break;
-            case "q":
-                exit(0);
-        }
-
     }
 
     public void checkIfCanDraw() {
@@ -635,8 +495,8 @@ public class GameManager {
                         System.out.print(i + "      ");
                     }
                 } else {
+                    System.out.println(p.getPlayerNum() + ": ");
                     if(p == currentPlayer) {
-                        System.out.println(p.getPlayerNum() + ": ");
                         p.printHand();
                         //adds labels to dominoes: 1,2,3,...
                         for(int i = 1; i < (p.getHandSize()+1); i++) {
@@ -659,8 +519,8 @@ public class GameManager {
                         System.out.print(i + "      ");
                     }
                 } else {
+                    System.out.println(p.getPlayerNum() + ": ");
                     if(p == currentPlayer) {
-                        System.out.println(p.getPlayerNum() + ": ");
                         p.printHand();
                         //adds labels to dominoes: 1,2,3,...
                         for(int i = 1; i < (p.getHandSize()+1); i++) {
@@ -689,41 +549,96 @@ public class GameManager {
         System.out.println("------------------------------------");
     }
 
-    public void getComputerMove(Player p) {
-        if(checkPlayableSpots(p)) {
-            getComPlay(p);
-        } else {
-            if(!p.checkIfDrawn()) {
+    public void startTurn() {
+        getPlayerTurn();
+        if(currentPlayer.checkIfComputer()) {
+            for(Player p : players) {
+                if(p.checkIfCanPlayNonDoubleTrain()) {
+                    p.makeFalseCanPlayNonDoubleTrain();
+                    currentPlayer = p;
+                }
+            }
+            if(checkIfDoubleOpen()) {
+                getComputerMoveDouble();
+            } else {
+                System.out.println(currentPlayer.getPlayerNum() + " start turn get com move");
+                getComputerMove();
+                startTurn();
+
+            }
+            //startTurn();
+            System.out.println("in start turn before change player turn" + currentPlayer.getPlayerNum());
+            //board.changePlayerTurn();
+            //getPlayerTurn();
+            System.out.println("in start turn change player turn" + currentPlayer.getPlayerNum());
+        }
+        System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
+        System.out.println("[p] play domino");
+        System.out.println("[d] draw from boneyard");
+        System.out.println("[s] skip turn");
+        System.out.println("[q] quit");
+        String playerOption = in.nextLine();
+        switch (playerOption) {
+            case "p":
+                playDominoSetup();
+                break;
+            case "d":
                 checkIfCanDraw();
-                //getComputerMove();
+                break;
+            case "s":
+                checkIfCanSkip();
+                break;
+            case "q":
+                exit(0);
+        }
+
+    }
+
+    public void getComputerMove() {
+        System.out.println("get com move");
+        if(checkPlayableSpots(currentPlayer)) {
+            getComPlay();
+            board.changePlayerTurn();
+            getPlayerTurn();
+            startTurn();
+        } else {
+            if(!currentPlayer.checkIfDrawn()) {
+                checkIfCanDraw();
             } else {
                 checkIfCanSkip();
+                getPlayerTurn();
+                //startTurn();
             }
         }
     }
 
-    public void getComputerMoveDouble(Player p) {
-        if(checkPlayableSpotsOpenDouble(p)) {
-            getComPlayDouble(p);
+    public void getComputerMoveDouble() {
+        if(checkPlayableSpotsOpenDouble(currentPlayer)) {
+            getComPlayDouble();
+            getPlayerTurn();
+            board.changePlayerTurn();
+            startTurn();
         } else {
-            if(!p.checkIfDrawn()) {
+            if(!currentPlayer.checkIfDrawn()) {
                 checkIfCanDraw();
             } else {
                 checkIfCanSkip();
+                getPlayerTurn();
+                startTurn();
             }
         }
     }
 
     //checks to see which domino matches computers train and which of those
     //that match have the highest points
-    public void getComPlay(Player p) {
+    public void getComPlay() {
         boolean played = false;
         System.out.println("getcomplay");
         ArrayList<Domino> tempMatches = new ArrayList<>();
-        for(int i = 0; i < p.getHandSize(); i++) {
+        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
             Domino dom = currentPlayer.getDomino(i);
             for(Player player : players) {
-                if(player.getTrainState()) {
+                if(player.getTrainState() || player == currentPlayer) {
                     if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
                         tempMatches.add(dom);
                     }
@@ -733,69 +648,90 @@ public class GameManager {
                 }
             }
         }
-        Domino dom = organizeComCombo(tempMatches);
+        Domino dom = getMaxScoreDom(tempMatches);
+
         for(Player player : players) {
-            if(player.getTrainState() || player == currentPlayer) {
-                if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                    if(checkRotation(player.getLastTrainDom(), dom)) {
-                        dom.rotateTile();
+            if(player == currentPlayer) {
+                if(!played) {
+                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                        if(checkRotation(player.getLastTrainDom(), dom)) {
+                            dom.rotateTile();
+                        }
+                        player.addDomToTrain(dom);
+                        currentPlayer.removeRandomDomFromHand(dom);
+                        printGameState();
+                        played = true;
                     }
-                    player.addDomToTrain(dom);
-                    if(!checkIfDomDouble(dom)) {
-                        board.changePlayerTurn();
+                }
+            }
+            if(player.getTrainState()) {
+                if(!played) {
+                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                        if(checkRotation(player.getLastTrainDom(), dom)) {
+                            dom.rotateTile();
+                        }
+                        player.addDomToTrain(dom);
+                        currentPlayer.removeRandomDomFromHand(dom);
+                        printGameState();
+                        played = true;
                     }
-                    p.removeRandomDomFromHand(dom);
-                    printGameState();
-                    played = true;
                 }
             }
         }
-        if(played == false) {
+        if(!played) {
             if(checkIfDomMatches(mexTrain.getLastTrainDom(), dom)) {
                 if(checkRotation(mexTrain.getLastTrainDom(), dom)) {
                     dom.rotateTile();
                 }
                 mexTrain.addDomToTrain(dom);
-                if(!checkIfDomDouble(dom)) {
-                    board.changePlayerTurn();
-                }
-                p.removeRandomDomFromHand(dom);
+                currentPlayer.removeRandomDomFromHand(dom);
                 printGameState();
             }
+        }
+        if(checkIfDomDouble(dom)) {
+            currentPlayer.makeTrueCanPlayNonDoubleTrain();
         }
     }
 
     //checks to see which domino matches double open train and which of those
     //that match have the highest points
-    public void getComPlayDouble(Player p) {
+    public void getComPlayDouble() {
         Player player = getOpenDoubleTrain();
         ArrayList<Domino> tempMatches = new ArrayList<>();
-        for(int i = 0; i < p.getHandSize(); i++) {
+        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
             Domino dom = currentPlayer.getDomino(i);
             if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
                 tempMatches.add(dom);
             }
         }
-        Domino dom = organizeComCombo(tempMatches);
+        Domino dom = getMaxScoreDom(tempMatches);
         if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
             if(checkRotation(player.getLastTrainDom(), dom)) {
                 dom.rotateTile();
             }
             player.addDomToTrain(dom);
             board.changePlayerTurn();
-            p.removeRandomDomFromHand(dom);
+            currentPlayer.removeRandomDomFromHand(dom);
             printGameState();
         }
     }
 
-    public Domino organizeComCombo(ArrayList temp) {
+    public Domino getMaxScoreDom(ArrayList temp) {
+        System.out.println(temp);
         ArrayList<Integer> scoreTemp = new ArrayList<>();
         for(int i = 0; i < temp.size(); i++) {
             Domino dom = (Domino) temp.get(i);
             int s = dom.getPipTotal(dom);
             scoreTemp.add(s);
         }
-        int index = Collections.max(scoreTemp);
+        int index;
+        if(scoreTemp.size() > 1) {
+            index = Collections.max(scoreTemp);
+        } else {
+            System.out.println(scoreTemp);
+            index = scoreTemp.get(0);
+        }
+
         int indexOfTemp = 0;
         for(int i = 0; i < scoreTemp.size(); i++) {
             if(scoreTemp.get(i) == index) {
@@ -803,5 +739,130 @@ public class GameManager {
             }
         }
         return (Domino) temp.get(indexOfTemp);
+    }
+
+    ////////////////GUI PART
+    public void updateComponents(Label currentPlayerLbl, HBox playerHand) {
+        getPlayerTurn();
+        currentPlayerLbl.setText("Current Player: " + currentPlayer.getPlayerNum());
+        updatePlayerHand(playerHand);
+    }
+
+    public void updateBoard(HBox center, VBox p1, HBox p2, VBox p3, VBox p4, HBox mexTrainBox,
+                            Label p1Label, Label p2Label, Label p3Label, Label p4Label, Label mexTrainLabel,
+                            Button mexTrainButton, Button p1Button, Button p2Button, Button p3Button, Button p4Button) {
+        updateCenter(center);
+        updateMexTrain(mexTrainBox, mexTrain, mexTrainLabel);
+        mexTrainButton.setText("Play on Mexican Train");
+        if(totalPlayers == 2) {
+            updateTrain1(p1, players.get(0), p1Label);
+            p1Button.setText("Play on P1 Train");
+            updateTrain2(p2, players.get(1), p2Label);
+            p2Button.setText("Play on P2 Train");
+        } else if(totalPlayers == 3) {
+            updateTrain1(p1, players.get(0), p1Label);
+            p1Button.setText("Play on P1 Train");
+            updateTrain2(p2, players.get(1), p2Label);
+            p2Button.setText("Play on P2 Train");
+            updateTrain3(p3, players.get(2), p3Label);
+            p3Button.setText("Play on P3 Train");
+        } else if(totalPlayers == 4) {
+            updateTrain1(p1, players.get(0), p1Label);
+            p1Button.setText("Play on P1 Train");
+            updateTrain2(p2, players.get(1), p2Label);
+            p2Button.setText("Play on P2 Train");
+            updateTrain3(p3, players.get(2), p3Label);
+            p3Button.setText("Play on P3 Train");
+            updateTrain4(p4, players.get(3), p4Label);
+            p4Button.setText("Play on P4 Train");
+        }
+    }
+
+    public void updateTrain1(VBox p1, Player player1, Label p1Label) {
+        p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
+        ArrayList<ImageView> imageStack = new ArrayList<>();
+        p1.getChildren().clear();
+        for(int i = 0; i < player1.getTrainSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(player1.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate()+90);
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        p1.getChildren().addAll(imageStack);
+    }
+    public void updateTrain2(HBox p2, Player player2, Label p2Label) {
+        p2Label.setText(player2.getPlayerNum() + " Train" + "(" + player2.getTrainState() + ")");
+        ArrayList<ImageView> imageStack = new ArrayList<>();
+        p2.getChildren().clear();
+        for(int i = 0; i < player2.getTrainSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(player2.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate());
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        p2.getChildren().addAll(imageStack);
+    }
+    public void updateTrain3(VBox p3, Player player3, Label p3Label) {
+        p3Label.setText(player3.getPlayerNum() + " Train" + "(" + player3.getTrainState() + ")");
+        ArrayList<ImageView> imageStack = new ArrayList<>();
+        p3.getChildren().clear();
+        for(int i = 0; i < player3.getTrainSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(player3.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 180);
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        p3.getChildren().addAll(imageStack);
+    }
+    public void updateTrain4(VBox p4, Player player4, Label p4Label) {
+        p4Label.setText(player4.getPlayerNum() + " Train" + "(" + player4.getTrainState() + ")");
+        ArrayList<ImageView> imageStack = new ArrayList<>();
+        p4.getChildren().clear();
+        for(int i = 0; i < player4.getTrainSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(player4.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 74.1);
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        p4.getChildren().addAll(imageStack);
+    }
+    public void updateMexTrain(HBox mexTrainBox, Player mexTrain, Label mexTrainLabel) {
+        mexTrainLabel.setText(mexTrain.getPlayerNum() + "(" + mexTrain.getTrainState() + ")");
+        ArrayList<ImageView> imageStack = new ArrayList<>();
+        mexTrainBox.getChildren().clear();
+        for(int i = 0; i < mexTrain.getTrainSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(mexTrain.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate());// + 118);
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        mexTrainBox.getChildren().addAll(imageStack);
+    }
+
+    public void updateCenter(HBox center) {
+        center.getChildren().clear();
+        ImageView currentImageView = new ImageView();
+        Image currentDominoImage = new Image(board.getCenter().getDomImage(),60,40,true,true);
+        currentImageView.setImage(currentDominoImage);
+        center.getChildren().addAll(currentImageView);
+
+    }
+
+    public void updatePlayerHand(HBox playerHands) {
+        playerHands.getChildren().clear();
+        imageStack.clear();
+        for(int i = 0; i < currentPlayer.getHandSize(); ++i) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(currentPlayer.getDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setImage(currentDominoImage);
+            imageStack.add(currentImageView);
+        }
+        playerHands.getChildren().addAll(imageStack);
+
     }
 }
