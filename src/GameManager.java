@@ -1,3 +1,9 @@
+/**
+ * @author Annel Cota
+ *
+ * This class
+ */
+
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,6 +94,11 @@ public class GameManager {
         }
     }
 
+    /**
+     * Checks if any of the players hands are empty by checking
+     * to see if they are of size 0.
+     * @return any hands are empty or not
+     */
     public boolean checkIfPlayersHandEmpty() {
         for(Player p : players) {
             if(p.getHandSize() == 0) {
@@ -97,6 +108,9 @@ public class GameManager {
         return false;
     }
 
+    /**
+     *
+     */
     public void getScore() {
         int i = 0;
         for(Player p : players){
@@ -107,6 +121,11 @@ public class GameManager {
         }
     }
 
+    /**
+     * Checks if a double is open by looking at the last domino
+     * of each train and checking if it is a double domino.
+     * @return double is open or not
+     */
     public boolean checkIfDoubleOpen() {
         if(checkIfDomDouble(mexTrain.getLastTrainDom())) {
             return true;
@@ -119,6 +138,10 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Gets the player with the train that has an open double.
+     * @return player train that has open double
+     */
     public Player getOpenDoubleTrain() {
         if(checkIfDomDouble(mexTrain.getLastTrainDom())) {
             return mexTrain;
@@ -131,10 +154,18 @@ public class GameManager {
         return null;
     }
 
+    /**
+     * Gets the winner of the game by getting the lowest score of all
+     * the players.
+     * @return player with lowest score
+     */
     public Player getWinner() {
         return players.get(scoreHolder.indexOf(Collections.min(scoreHolder)));
     }
 
+    /**
+     * Whichever players turn it is, becomes the current player.
+     */
     public void getPlayerTurn() {
         for(Player p : players){
             if(p.getPlayerTurn()) {
@@ -143,6 +174,9 @@ public class GameManager {
         }
     }
 
+    /**
+     *
+     */
     public void checkIfCanDraw() {
         //if there is a playable domino, cannot draw
         //checking if there are playable plays for when there is a double open
@@ -233,6 +267,11 @@ public class GameManager {
         }
     }
 
+    /**
+     * Checks if there are any of the players can make
+     * any more moves.
+     * @return if there are any more plays or not
+     */
     public boolean checkIfNoMorePlays() {
         for(Player p : players){
             if(checkPlayableSpots(p)) {
@@ -242,6 +281,11 @@ public class GameManager {
         return true;
     }
 
+    /**
+     *
+     * @param currentPlayer
+     * @return
+     */
     public boolean checkPlayableSpots(Player currentPlayer) {
         //goes through each dom in players hand
         for(int i = 0; i < currentPlayer.getHandSize(); i++) {
@@ -328,7 +372,7 @@ public class GameManager {
                 Domino lastMexDom = mexTrain.getLastTrainDom();
                 if(checkIfDomMatches(lastMexDom, playDom)) {
                     if(checkRotation(lastMexDom, playDom)) {
-                        playDom.rotateTile();
+                        playDom.rotateDom();
                     }
                     mexTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -347,7 +391,7 @@ public class GameManager {
                 Domino lastDom = playTrain.getLastTrainDom();
                 if(checkIfDomMatches(lastDom, playDom)) {
                     if(checkRotation(lastDom, playDom)) {
-                        playDom.rotateTile();
+                        playDom.rotateDom();
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -383,7 +427,7 @@ public class GameManager {
             Domino lastMexDom = mexTrain.getLastTrainDom();
             if(checkIfDomMatches(lastMexDom, playDom)) {
                 if(checkRotation(lastMexDom, playDom)) {
-                    playDom.rotateTile();
+                    playDom.rotateDom();
                 }
                 mexTrain.addDomToTrain(playDom);
                 currentPlayer.removeDomFromHand(playDom);
@@ -416,7 +460,7 @@ public class GameManager {
                 Domino lastDom = playTrain.getLastTrainDom();
                 if(checkIfDomMatches(lastDom, playDom)) {
                     if(checkRotation(lastDom, playDom)) {
-                        playDom.rotateTile();
+                        playDom.rotateDom();
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -637,7 +681,7 @@ public class GameManager {
     public void startTurn() {
         getPlayerTurn();
         if(console) {
-            String playerOption = null;
+            String playerOption;
             if(!currentPlayer.checkIfComputer()) {
                 System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
                 System.out.println("[p] play domino");
@@ -728,33 +772,33 @@ public class GameManager {
 
     //checks to see which domino matches double open train and which of those
     //that match have the highest points
-    public void getComPlayDouble() {
-        Player player = getOpenDoubleTrain();
-        ArrayList<Domino> tempMatches = new ArrayList<>();
-        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
-            Domino dom = currentPlayer.getDomino(i);
-            if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                tempMatches.add(dom);
-            }
-        }
-        Domino dom = getMaxScoreDom(tempMatches);
-        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-            if(checkRotation(player.getLastTrainDom(), dom)) {
-                dom.rotateTile();
-            }
-            player.addDomToTrain(dom);
-            board.changePlayerTurn();
-            currentPlayer.removeRandomDomFromHand(dom);
-            printGameState();
-        }
-    }
+//    public void getComPlayDouble() {
+//        Player player = getOpenDoubleTrain();
+//        ArrayList<Domino> tempMatches = new ArrayList<>();
+//        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
+//            Domino dom = currentPlayer.getDomino(i);
+//            if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+//                tempMatches.add(dom);
+//            }
+//        }
+//        Domino dom = getMaxScoreDom(tempMatches);
+//        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+//            if(checkRotation(player.getLastTrainDom(), dom)) {
+//                dom.rotateDom();
+//            }
+//            player.addDomToTrain(dom);
+//            board.changePlayerTurn();
+//            currentPlayer.removeRandomDomFromHand(dom);
+//            printGameState();
+//        }
+//    }
 
     public Domino getMaxScoreDom(ArrayList temp) {
         System.out.println(temp);
         ArrayList<Integer> scoreTemp = new ArrayList<>();
         for(int i = 0; i < temp.size(); i++) {
             Domino dom = (Domino) temp.get(i);
-            int s = dom.getPipTotal(dom);
+            int s = dom.getPipTotal();
             scoreTemp.add(s);
         }
         int index;

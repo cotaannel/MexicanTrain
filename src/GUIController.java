@@ -1,3 +1,12 @@
+/**
+ * @author Annel Cota
+ *
+ * This GUIController class is from the first window of the GUI version.
+ * It gets the total number of players and number of human and computer
+ * players from the user using text fields. It also sets those values in
+ * the Values class.
+ */
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,10 +20,6 @@ public class GUIController {
     private int totPlayers;
     private int humanPlayers;
     private int computerPlayers;
-    private int totPlayers2 = 4;
-    private int humanPlayers2 = 4;
-    private int computerPlayers2 = 0;
-
     private Values values;
     @FXML
     private TextField totalPlayersText;
@@ -36,6 +41,10 @@ public class GUIController {
         anotherStage.show();
     }
 
+    /**
+     * Gets the total number of players from the user's input
+     * in the text field and sets the value in Values.
+     */
     public void getTotalPlayers(){
         values = Main.getValues();
         String s = totalPlayersText.getText();
@@ -43,12 +52,20 @@ public class GUIController {
         values.setTotalPlayers(totPlayers);
     }
 
+    /**
+     * Gets the number of human players from the user's input
+     * in the text field and sets the value in Values.
+     */
     public void getHumPlayers(){
         String s = humPlayersText.getText();
         humanPlayers = Integer.parseInt(s);
         values.setHumanPlayers(humanPlayers);
     }
 
+    /**
+     * Gets the number of computer players from the user's input
+     * in the text field and sets the value in Values.
+     */
     public void getComPlayers(){
         String s = comPlayersText.getText();
         computerPlayers = Integer.parseInt(s);

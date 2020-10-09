@@ -1,3 +1,9 @@
+/**
+ * @author Annel Cota
+ *
+ * This class has
+ */
+
 import java.util.ArrayList;
 
 public class Player {
@@ -24,6 +30,11 @@ public class Player {
         train = new ArrayList<>();
     }
 
+    /**
+     * Calculates the score of the player by
+     * adding up all the left and right pips
+     * of the dominoes in the player's hand.
+     */
     public void calculateScore() {
         for(int i = 0; i < hand.size(); i++) {
             score += hand.get(i).getLeftNum();
@@ -31,23 +42,41 @@ public class Player {
         }
     }
 
+    /**
+     * Updates the player's score.
+     * @param score : the update score
+     */
     public void updateScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Creates the player's hand by drawing from
+     * the boneyard until the hand has the specified
+     * number of starting dominoes.
+     * @param by : the boneyard of dominoes
+     */
     public void createHand(Boneyard by) {
-        //this.addDomToHand(new Domino(0, by.centerNum, null));
         for (int i = 0; i < startingDomNum; i++) {
             this.addDomToHand(by.drawDom());
         }
     }
 
+    /**
+     * Prints the player's hand by looping through
+     * the player's hand and getting the string representation
+     * of the domino.
+     */
     public void printHand() {
         for(int i = 0; i < hand.size(); i++) {
             System.out.print(hand.get(i).toString() + "  " );
         }
         System.out.println();
     }
+
+    /**
+     * Prints out the player's train in two parallel rows.
+     */
     public void printTrain() {
         ArrayList<Domino> temp1 = new ArrayList<>();
         ArrayList<Domino> temp2 = new ArrayList<>();
@@ -71,108 +100,150 @@ public class Player {
         System.out.println();
     }
 
+    /**
+     * Gets the player's score
+     * @return player score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * When the player draws, hasDrawn becomes true.
+     */
     public void makeHasDrawnTrue() {
         hasDrawn = true;
     }
 
-    public void makeHasDrawnFalse() {
-        hasDrawn = false;
-    }
+    /**
+     * The player has not drawn, so hasDrawn is false.
+     */
+    public void makeHasDrawnFalse() { hasDrawn = false; }
 
-    public boolean checkIfCanPlayNonDoubleTrain() {
-        return canPlayNonDoubleTrain;
-    }
+    /**
+     * If a player plays a double, they can still play
+     * on a non double train, so this becomes true.
+     */
+    public void makeTrueCanPlayNonDoubleTrain() { canPlayNonDoubleTrain = true; }
 
-    public void makeTrueCanPlayNonDoubleTrain() {
-        canPlayNonDoubleTrain = true;
-    }
+    /**
+     * Once the player plays their extra turn after playing
+     * a double, this becomes false;
+     */
+    public void makeFalseCanPlayNonDoubleTrain() { canPlayNonDoubleTrain = false; }
 
-    public void makeFalseCanPlayNonDoubleTrain() {
-        canPlayNonDoubleTrain = false;
-    }
+    /**
+     * Checks if the player can play on a train that
+     * does not have the double domino.
+     * @return if can play on train other than double train
+     */
+    public boolean checkIfCanPlayNonDoubleTrain() { return canPlayNonDoubleTrain; }
 
-    public boolean checkIfDrawn() {
-        return hasDrawn;
-    }
+    /**
+     * Checks if the player has drawn yet.
+     * @return has drawn
+     */
+    public boolean checkIfDrawn() { return hasDrawn; }
 
-    public void makePlayerTurn() {
-        playerTurn = true;
-    }
+    /**
+     * Makes the player the current player.
+     */
+    public void makePlayerTurn() { playerTurn = true; }
 
-    public void makePlayerTurnFalse() {
-        playerTurn = false;
-    }
+    /**
+     * Makes the player not the current player;
+     */
+    public void makePlayerTurnFalse() { playerTurn = false; }
 
-    public boolean getPlayerTurn() {
-        return playerTurn;
-    }
+    /**
+     * Checks if the player is the current player.
+     * @return the player turn
+     */
+    public boolean getPlayerTurn() { return playerTurn; }
 
-    public void setComputer() {
-        isComputer = true;
-    }
+    /**
+     * If the player is a computer player,
+     * isComputer is true.
+     */
+    public void setComputer() { isComputer = true; }
 
-    public boolean checkIfComputer() {
-        return isComputer;
-    }
+    /**
+     * Checks if the player is a computer.
+     * @return is computer or not
+     */
+    public boolean checkIfComputer() { return isComputer; }
 
-    public ArrayList<Domino> getHand() {
-        return hand;
-    }
+    /**
+     * Adds a domino to the player's train.
+     * @param dom : domino being added
+     */
+    public void addDomToTrain(Domino dom) { train.add(dom); }
 
-    public void addDomToTrain(Domino dom) {
-        train.add(dom);
-    }
+    /**
+     * Get the player's name/number.
+     * In the form of player#.
+     * @return player's number
+     */
+    public String getPlayerNum() { return playerNum; }
 
-    public String getPlayerNum() {
-        return playerNum;
-    }
+    /**
+     * Get the size of player's hand.
+     * @return player's hand size
+     */
+    public int getHandSize() { return hand.size(); }
 
-    public int getHandSize() {
-        return hand.size();
-    }
-    public int getTrainSize() {
-        return train.size();
-    }
+    /**
+     * Get the size of the train.
+     * @return train size
+     */
+    public int getTrainSize() { return train.size(); }
 
-    public boolean getTrainState() {
-        return trainState;
-    }
+    /**
+     * See if the train is true(available to play on)
+     * or false(unavailable to play on).
+     * @return train's state
+     */
+    public boolean getTrainState() { return trainState; }
 
-    public void makeStateTrue() {
-        trainState = true;
-    }
+    /**
+     * Makes the train's state true.
+     */
+    public void makeStateTrue() { trainState = true; }
 
-    public void makeStateFalse() {
-        trainState = false;
-    }
+    /**
+     * Make the train's state false;
+     */
+    public void makeStateFalse() { trainState = false; }
 
-    public void addDomToHand(Domino dom) {
-        hand.add(dom);
-    }
+    /**
+     * Add a domino to player's hand.
+     * @param dom : domino being added
+     */
+    public void addDomToHand(Domino dom) { hand.add(dom); }
 
-    public void removeDomFromHand(Domino dom) {
-        hand.remove(dom);
-    }
+    /**
+     * Remove a domino from player's hand.
+     * @param dom : domino being removed
+     */
+    public void removeDomFromHand(Domino dom) { hand.remove(dom); }
 
-    public Domino getDomino(int i) {
-        return hand.get(i);
-    }
+    /**
+     * Get a domino from player's hand.
+     * @param i : the index of the domino
+     * @return the specified domino
+     */
+    public Domino getDomino(int i) { return hand.get(i); }
 
-    public Domino getTrainDomino(int i) {
-        return train.get(i);
-    }
+    /**
+     * Get a domino from the player's train.
+     * @param i : the index of the domino
+     * @return the specified domino from the train
+     */
+    public Domino getTrainDomino(int i) { return train.get(i); }
 
+    /**
+     * Get the last domino from the train.
+     * @return last domino from train
+     */
     public Domino getLastTrainDom() { return train.get(train.size()-1); }
-
-    public void removeRandomDomFromHand(Domino dom) {
-        for(int i = 0; i < hand.size(); i++) {
-            if(dom == hand.get(i)) {
-                hand.remove(i);
-            }
-        }
-    }
 }
