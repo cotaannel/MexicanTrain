@@ -8,14 +8,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GUIController {
-    private int totPlayers;// = 4;
-    private int humanPlayers;// = 4;
-    private int computerPlayers;// = 0;
+    private int totPlayers;
+    private int humanPlayers;
+    private int computerPlayers;
     private int totPlayers2 = 4;
     private int humanPlayers2 = 4;
     private int computerPlayers2 = 0;
 
-    Values values;
+    private Values values;
     @FXML
     private TextField totalPlayersText;
     @FXML
@@ -40,22 +40,18 @@ public class GUIController {
         values = Main.getValues();
         String s = totalPlayersText.getText();
         totPlayers = Integer.parseInt(s);
-        System.out.println(totPlayers);
         values.setTotalPlayers(totPlayers);
     }
 
     public void getHumPlayers(){
         String s = humPlayersText.getText();
         humanPlayers = Integer.parseInt(s);
-        System.out.println(humanPlayers);
         values.setHumanPlayers(humanPlayers);
     }
 
     public void getComPlayers(){
         String s = comPlayersText.getText();
         computerPlayers = Integer.parseInt(s);
-        System.out.println(computerPlayers);
         values.setComputerPlayers(computerPlayers);
     }
-
 }

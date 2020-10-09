@@ -35,7 +35,6 @@ public class Boneyard {
             }
         }
 
-
         //removes the center domino from boneyard
         Domino dom = new Domino(centerNum,centerNum,imagePath);
         for(int i = 0; i < boneyard.size(); i++) {

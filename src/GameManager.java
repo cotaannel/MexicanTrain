@@ -1,4 +1,3 @@
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -6,22 +5,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 import static java.lang.System.exit;
 
 public class GameManager {
     private Boneyard boneyard;
+    private Board board;
+    private Player currentPlayer = new Player();
+    private Player mexTrain = new Player();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private ArrayList<ImageView> imageStack;
     private boolean printAllPlayersHands = true;
     private boolean roundOver = false;
     private boolean changeTurn = true;
-    private Board board;
-    private Player currentPlayer = new Player();
-    private Player mexTrain = new Player();
+    private boolean console;
     private final Scanner in = new Scanner(System.in);
-    private int round = 0;
+    private int round = 1;
     private int totalPlayers;
     private int numHumanPlayers;
     private int numComPlayers;
@@ -30,16 +31,29 @@ public class GameManager {
     private int guiCenterNum = 9;
     private final int domWidth = 40;
     private final int domHeight = 21;
-    private boolean console;
-    private Values values;
+    private String label = " ";
 
     public GameManager() {
-        values = Main.getValues();
+        Values values = Main.getValues();
         this.console = values.checkIfConsole();
 
         if(!console) {
             boneyard = new Boneyard(guiCenterNum);
             imageStack = new ArrayList<>();
+            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
+                String s = "Round " + round + " is over.";
+                getScore();
+                s += "\nScores:\n";
+                for(Player p : players){
+                    s += p.getPlayerNum() + ": " + p.getScore();
+                }
+                updateLabel(s);
+                roundOver = true;
+                startNewRound();
+            }
+            if(round > 10) {
+                updateLabel("Game Over! \n" + getWinner().getPlayerNum() +" is the winner!");
+            }
         } else {
             startGame(totalPlayers, numHumanPlayers, numComPlayers);
             boolean gameOver = false;
@@ -134,22 +148,40 @@ public class GameManager {
         //checking if there are playable plays for when there is a double open
         if(checkIfDoubleOpen() && !currentPlayer.checkIfCanPlayNonDoubleTrain()){
             if(checkPlayableSpotsOpenDouble(currentPlayer)) {
-                if(console) { System.out.println("Cannot draw, there is a playable domino."); }
+                String s = "Cannot draw, there is a playable domino.";
+                if(console) {
+                    System.out.println(s);
+                } else {
+                    updateLabel(s);
+                }
             } else {
                 // does not let them draw twice in a turn
                 if(!currentPlayer.checkIfDrawn()) {
                     currentPlayer.addDomToHand(boneyard.drawDom());
                     currentPlayer.makeHasDrawnTrue();
-                    if(console) { System.out.println("Domino was drawn."); }
+                    if(console) {
+                        System.out.println("Domino was drawn.");
+                    } else {
+                        updateLabel("Domino was drawn.");
+                    }
                     printGameState();
+
                     startTurn();
                 } else {
-                    if(console) { System.out.println("Cannot draw again. Either play or skip."); }
+                    if(console) {
+                        System.out.println("Cannot draw again. Either play or skip.");
+                    } else {
+                        updateLabel("Cannot draw again. Either play or skip.");
+                    }
                 }
             }
         } else {
             if(checkPlayableSpots(currentPlayer)) {
-                if(console) { System.out.println("Cannot draw, there is a playable domino."); }
+                if(console) {
+                    System.out.println("Cannot draw, there is a playable domino.");
+                } else {
+                    updateLabel("Cannot draw, there is a playable domino.");
+                }
             } else {
                 // does not let them draw twice in a turn
                 if(!currentPlayer.checkIfDrawn()) {
@@ -159,7 +191,11 @@ public class GameManager {
                     printGameState();
                     startTurn();
                 } else {
-                    if(console) { System.out.println("Cannot draw again. Either play or skip."); }
+                    if(console) {
+                        System.out.println("Cannot draw again. Either play or skip.");
+                    } else {
+                        updateLabel("Cannot draw again. Either play or skip.");
+                    }
                 }
             }
         }
@@ -169,15 +205,28 @@ public class GameManager {
         //have to fix, if double played, and cannot make another play, cannot skip until drawn
         if(checkPlayableSpots(currentPlayer)) {
             //if there are playable spots, can't skip
-            if(console) { System.out.println("Cannot skip, there is a playable domino."); }
+            String s = "Cannot skip, there is a playable domino.";
+            if(console) {
+                System.out.println(s);
+            } else {
+                updateLabel(s);
+            }
         } else if(!currentPlayer.checkIfDrawn()) {
             //if there aren't playable spots, but hasn't drawn yet, can't skip
             //has to draw first
-            if(console) { System.out.println("Cannot skip, first draw and try to play again."); }
+            if(console) {
+                System.out.println("Cannot skip, first draw and try to play again.");
+            } else {
+                updateLabel("Cannot skip, first draw and try to play again.");
+            }
         } else {
             //no playable spots & has drawn
             //makes current player's train true
-            if(console) { System.out.println(currentPlayer.getPlayerNum() + " has skipped."); }
+            if(console) {
+                System.out.println(currentPlayer.getPlayerNum() + " has skipped.");
+            } else {
+                updateLabel(currentPlayer.getPlayerNum() + " has skipped.");
+            }
             board.changePlayerTurn();
             currentPlayer.makeStateTrue();
             if(console) { printGameState(); }
@@ -228,31 +277,52 @@ public class GameManager {
     }
 
     public void playDominoSetup() {
-        System.out.println("Which domino?");
-        int domChoice = in.nextInt();
-        System.out.println("Which train?");
-        System.out.println("For Mexican Train:0, Rest of Players as shown:1,2,3,4 & so on.");
-        int trainChoice = in.nextInt();
+        int domChoice = 0;
+        int trainChoice = 0;
+        if(!currentPlayer.checkIfComputer()) {
+            System.out.println("Which domino?");
+            domChoice = in.nextInt();
+            System.out.println("Which train?");
+            System.out.println("For Mexican Train:0, Rest of Players as shown:1,2,3,4 & so on.");
+            trainChoice = in.nextInt();
+            playDominoSetupChoices(domChoice,trainChoice);
+        } else {
+            getComPlay();
+        }
+    }
+
+    public void playDominoSetupChoices(int domChoice, int trainChoice) {
+        Domino playDom = currentPlayer.getDomino(domChoice-1);
+        Player playTrain;
+        if(trainChoice == 0) {
+            playTrain = mexTrain;
+        } else {
+            playTrain = players.get(trainChoice-1);
+        }
         if(!checkIfDoubleOpen()) {
-            checkIfLegal(domChoice, trainChoice);
+            checkIfLegal(playDom, playTrain);
         } else {
             if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
-                checkIfLegal(domChoice, trainChoice);
+                checkIfLegal(playDom, playTrain);
             } else {
-                checkIfLegalDoubleOpen(domChoice, trainChoice);
+                checkIfLegalDoubleOpen(playDom, playTrain);
+            }
+        }
+    }
+    public void playDominoSetupChoicesComputer(Domino playDom, Player playTrain) {
+        if(!checkIfDoubleOpen()) {
+            checkIfLegal(playDom, playTrain);
+        } else {
+            if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+                checkIfLegal(playDom, playTrain);
+            } else {
+                checkIfLegalDoubleOpen(playDom, playTrain);
             }
         }
     }
 
-    public void checkIfLegalDoubleOpen(int dom, int train) {
-        Domino playDom = currentPlayer.getDomino(dom-1);
+    public void checkIfLegalDoubleOpen(Domino playDom, Player playTrain) {
         Player trainDouble = getOpenDoubleTrain();
-        Player playTrain;
-        if(train == 0) {
-            playTrain = mexTrain;
-        } else {
-            playTrain = players.get(train-1);
-        }
         if(playTrain == trainDouble) {
             if(playTrain == mexTrain) {
                 Domino lastMexDom = mexTrain.getLastTrainDom();
@@ -267,6 +337,8 @@ public class GameManager {
                     if(console) {
                         System.out.println("That domino cannot go on the Mexican Train.");
                         System.out.println("Please pick again.");
+                    } else {
+                        updateLabel("That domino cannot go on the Mexican Train. \nPlease pick again.");
                     }
                     changeTurn = false;
                 }
@@ -285,12 +357,18 @@ public class GameManager {
                     if(console) {
                         System.out.println("That domino does not match. Try again.");
                         printGameState();
+                    } else {
+                        updateLabel("That domino does not match. Try again.");
                     }
                     changeTurn = false;
                 }
             }
         } else {
-            if(console) { System.out.println("There is a double open that has to be closed."); }
+            if(console) {
+                System.out.println("There is a double open that has to be closed.");
+            } else {
+                updateLabel("There is a double open that has to be closed.");
+            }
             changeTurn = false;
         }
 
@@ -300,15 +378,7 @@ public class GameManager {
         if(console) { printGameState(); }
     }
 
-    public void checkIfLegal(int dom, int train) {
-        Domino playDom = currentPlayer.getDomino(dom-1);
-        Player playTrain;
-        if(train == 0) {
-            playTrain = mexTrain;
-        } else {
-            playTrain = players.get(train-1);
-        }
-
+    public void checkIfLegal(Domino playDom, Player playTrain) {
         if(playTrain == mexTrain) {
             Domino lastMexDom = mexTrain.getLastTrainDom();
             if(checkIfDomMatches(lastMexDom, playDom)) {
@@ -322,7 +392,11 @@ public class GameManager {
                     currentPlayer.makeFalseCanPlayNonDoubleTrain();
                 }
                 if(checkIfDomDouble(playDom)) {
-                    if(console) { System.out.println("Double played. Go again."); }
+                    if(console) {
+                        System.out.println("Double played. Go again.");
+                    } else {
+                        updateLabel("Double played. Go again.");
+                    }
                     changeTurn = false;
                     currentPlayer.makeTrueCanPlayNonDoubleTrain();
                 }
@@ -331,6 +405,8 @@ public class GameManager {
                 if(console) {
                     System.out.println("That domino cannot go on the Mexican Train.");
                     System.out.println("Please pick again.");
+                } else {
+                    updateLabel("That domino cannot go on the Mexican Train. \nPlease pick again.");
                 }
                 changeTurn = false;
             }
@@ -350,7 +426,11 @@ public class GameManager {
                         currentPlayer.makeFalseCanPlayNonDoubleTrain();
                     }
                     if(checkIfDomDouble(playDom)) {
-                        if(console) { System.out.println("Double played. Go again."); }
+                        if(console) {
+                            System.out.println("Double played. Go again.");
+                        } else {
+                            updateLabel("Double played. Go again.");
+                        }
                         changeTurn = false;
                         currentPlayer.makeTrueCanPlayNonDoubleTrain();
                     }
@@ -358,11 +438,17 @@ public class GameManager {
                     if(console) {
                         System.out.println("That domino does not match. Try again.");
                         printGameState();
+                    } else {
+                        updateLabel("That domino does not match. \nTry again.");
                     }
                     changeTurn = false;
                 }
             } else {
-                if(console) { System.out.println("This train is not playable. Try again."); }
+                if(console) {
+                    System.out.println("This train is not playable. Try again.");
+                } else {
+                    updateLabel("This train is not playable. Try again.");
+                }
                 changeTurn = false;
             }
         }
@@ -374,7 +460,8 @@ public class GameManager {
     }
 
     public boolean checkIfDomMatches(Domino lastDom, Domino playDom) {
-        return (lastDom.getRightNum() == playDom.getLeftNum()) || (lastDom.getRightNum() == playDom.getRightNum());
+        return (lastDom.getRightNum() == playDom.getLeftNum()) ||
+                (lastDom.getRightNum() == playDom.getRightNum());
     }
 
     public boolean checkRotation(Domino lastDom, Domino playDom) {
@@ -403,8 +490,6 @@ public class GameManager {
         } else {
             centerNum = 9;
         }
-
-
         //changes starting number of dominoes depending on number of players
         if(centerNum == 12) {
             if(totalPlayers == 8) {
@@ -551,80 +636,59 @@ public class GameManager {
 
     public void startTurn() {
         getPlayerTurn();
-        if(currentPlayer.checkIfComputer()) {
-            for(Player p : players) {
-                if(p.checkIfCanPlayNonDoubleTrain()) {
-                    p.makeFalseCanPlayNonDoubleTrain();
-                    currentPlayer = p;
+        if(console) {
+            String playerOption = null;
+            if(!currentPlayer.checkIfComputer()) {
+                System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
+                System.out.println("[p] play domino");
+                System.out.println("[d] draw from boneyard");
+                System.out.println("[s] skip turn");
+                System.out.println("[q] quit");
+                playerOption = in.nextLine();
+            } else {
+                if(!checkIfDoubleOpen()) {
+                    playerOption = getComputerMove();
+                } else {
+                    playerOption = getComputerMoveDouble();
                 }
             }
-            if(checkIfDoubleOpen()) {
-                getComputerMoveDouble();
-            } else {
-                System.out.println(currentPlayer.getPlayerNum() + " start turn get com move");
-                getComputerMove();
-                startTurn();
-
+            switch (playerOption) {
+                case "p":
+                    playDominoSetup();
+                    break;
+                case "d":
+                    checkIfCanDraw();
+                    break;
+                case "s":
+                    checkIfCanSkip();
+                    break;
+                case "q":
+                    exit(0);
             }
-            //startTurn();
-            System.out.println("in start turn before change player turn" + currentPlayer.getPlayerNum());
-            //board.changePlayerTurn();
-            //getPlayerTurn();
-            System.out.println("in start turn change player turn" + currentPlayer.getPlayerNum());
-        }
-        System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
-        System.out.println("[p] play domino");
-        System.out.println("[d] draw from boneyard");
-        System.out.println("[s] skip turn");
-        System.out.println("[q] quit");
-        String playerOption = in.nextLine();
-        switch (playerOption) {
-            case "p":
-                playDominoSetup();
-                break;
-            case "d":
-                checkIfCanDraw();
-                break;
-            case "s":
-                checkIfCanSkip();
-                break;
-            case "q":
-                exit(0);
         }
 
     }
 
-    public void getComputerMove() {
-        System.out.println("get com move");
+    public String getComputerMove() {
         if(checkPlayableSpots(currentPlayer)) {
-            getComPlay();
-            board.changePlayerTurn();
-            getPlayerTurn();
-            startTurn();
+            return "p";
         } else {
             if(!currentPlayer.checkIfDrawn()) {
-                checkIfCanDraw();
+                return "d";
             } else {
-                checkIfCanSkip();
-                getPlayerTurn();
-                //startTurn();
+                return "s";
             }
         }
     }
 
-    public void getComputerMoveDouble() {
+    public String getComputerMoveDouble() {
         if(checkPlayableSpotsOpenDouble(currentPlayer)) {
-            getComPlayDouble();
-            getPlayerTurn();
-            board.changePlayerTurn();
-            startTurn();
+            return "p";
         } else {
             if(!currentPlayer.checkIfDrawn()) {
-                checkIfCanDraw();
+                return "d";
             } else {
-                checkIfCanSkip();
-                getPlayerTurn();
-                startTurn();
+                return "s";
             }
         }
     }
@@ -632,65 +696,34 @@ public class GameManager {
     //checks to see which domino matches computers train and which of those
     //that match have the highest points
     public void getComPlay() {
-        boolean played = false;
-        System.out.println("getcomplay");
-        ArrayList<Domino> tempMatches = new ArrayList<>();
-        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
-            Domino dom = currentPlayer.getDomino(i);
-            for(Player player : players) {
-                if(player.getTrainState() || player == currentPlayer) {
-                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                        tempMatches.add(dom);
-                    }
-                }
+        //if(!checkIfDoubleOpen()) {
+            System.out.println("getcomplay");
+            ArrayList<Domino> tempMatches = new ArrayList<>();
+            ArrayList<Player> tempTrainMatches = new ArrayList<>();
+            for(int i = 0; i < currentPlayer.getHandSize(); i++) {
+                Domino dom = currentPlayer.getDomino(i);
                 if(checkIfDomMatches(mexTrain.getLastTrainDom(), dom)) {
                     tempMatches.add(dom);
-                }
-            }
-        }
-        Domino dom = getMaxScoreDom(tempMatches);
+                    tempTrainMatches.add(mexTrain);
 
-        for(Player player : players) {
-            if(player == currentPlayer) {
-                if(!played) {
-                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                        if(checkRotation(player.getLastTrainDom(), dom)) {
-                            dom.rotateTile();
+                }
+                for(Player player : players) {
+                    if(player.getTrainState() || player == currentPlayer) {
+                        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                            tempMatches.add(dom);
+                            tempTrainMatches.add(player);
                         }
-                        player.addDomToTrain(dom);
-                        currentPlayer.removeRandomDomFromHand(dom);
-                        printGameState();
-                        played = true;
                     }
                 }
             }
-            if(player.getTrainState()) {
-                if(!played) {
-                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                        if(checkRotation(player.getLastTrainDom(), dom)) {
-                            dom.rotateTile();
-                        }
-                        player.addDomToTrain(dom);
-                        currentPlayer.removeRandomDomFromHand(dom);
-                        printGameState();
-                        played = true;
-                    }
-                }
-            }
-        }
-        if(!played) {
-            if(checkIfDomMatches(mexTrain.getLastTrainDom(), dom)) {
-                if(checkRotation(mexTrain.getLastTrainDom(), dom)) {
-                    dom.rotateTile();
-                }
-                mexTrain.addDomToTrain(dom);
-                currentPlayer.removeRandomDomFromHand(dom);
-                printGameState();
-            }
-        }
-        if(checkIfDomDouble(dom)) {
-            currentPlayer.makeTrueCanPlayNonDoubleTrain();
-        }
+            Random rand = new Random();
+            Player randomInt = tempTrainMatches.get(rand.nextInt(tempTrainMatches.size()));
+            System.out.print(tempTrainMatches);
+            Domino dom = getMaxScoreDom(tempMatches);
+            playDominoSetupChoicesComputer(dom, randomInt);
+//        } else {
+//            getComPlayDouble();
+//        }
     }
 
     //checks to see which domino matches double open train and which of those
@@ -742,41 +775,37 @@ public class GameManager {
     }
 
     ////////////////GUI PART
-    public void updateComponents(Label currentPlayerLbl, HBox playerHand) {
+    public void updateComponents(Label currentPlayerLbl, Label currentPlayerLbl1, HBox playerHand) {
         getPlayerTurn();
         currentPlayerLbl.setText("Current Player: " + currentPlayer.getPlayerNum());
+        currentPlayerLbl1.setText(currentPlayer.getPlayerNum() + "'s hand:");
         updatePlayerHand(playerHand);
     }
 
-    public void updateBoard(HBox center, VBox p1, HBox p2, VBox p3, VBox p4, HBox mexTrainBox,
-                            Label p1Label, Label p2Label, Label p3Label, Label p4Label, Label mexTrainLabel,
-                            Button mexTrainButton, Button p1Button, Button p2Button, Button p3Button, Button p4Button) {
+    public void updateBoard(HBox center, VBox p1, HBox p2, VBox p3, VBox p4,
+                            HBox mexTrainBox, Label p1Label, Label p2Label, Label p3Label,
+                            Label p4Label, Label mexTrainLabel, Label gameStateLabel) {
         updateCenter(center);
         updateMexTrain(mexTrainBox, mexTrain, mexTrainLabel);
-        mexTrainButton.setText("Play on Mexican Train");
         if(totalPlayers == 2) {
             updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
             updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
         } else if(totalPlayers == 3) {
             updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
             updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
             updateTrain3(p3, players.get(2), p3Label);
-            p3Button.setText("Play on P3 Train");
         } else if(totalPlayers == 4) {
             updateTrain1(p1, players.get(0), p1Label);
-            p1Button.setText("Play on P1 Train");
             updateTrain2(p2, players.get(1), p2Label);
-            p2Button.setText("Play on P2 Train");
             updateTrain3(p3, players.get(2), p3Label);
-            p3Button.setText("Play on P3 Train");
             updateTrain4(p4, players.get(3), p4Label);
-            p4Button.setText("Play on P4 Train");
         }
+        gameStateLabel.setText(getLabel());
+        label = " ";
     }
+    public void updateLabel(String s) { label = s; }
+
+    public String getLabel() { return label; }
 
     public void updateTrain1(VBox p1, Player player1, Label p1Label) {
         p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
@@ -863,6 +892,5 @@ public class GameManager {
             imageStack.add(currentImageView);
         }
         playerHands.getChildren().addAll(imageStack);
-
     }
 }
