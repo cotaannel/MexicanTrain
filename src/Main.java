@@ -11,10 +11,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    private static Values values = new Values();
+    public static Values values = new Values();
     public static void main(String[] args) {
-        values.makeConsoleTrue();
-        //values.makeConsoleFalse();
+        //values.makeConsoleTrue();
+        values.makeConsoleFalse();
         if(values.checkIfConsole()) {
             new GameManager();
         } else {

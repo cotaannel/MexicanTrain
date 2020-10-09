@@ -30,6 +30,11 @@ public class GUIController {
     @FXML
     private Button closeButton;
 
+    /**
+     * When the closeButton is clicked, this method is called.
+     * It closes the setup GUI and starts the Game.fxml file.
+     * @throws IOException
+     */
     @FXML
     public void closeWindow() throws IOException {
         Stage stage = (Stage) closeButton.getScene().getWindow();

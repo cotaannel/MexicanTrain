@@ -55,8 +55,8 @@
               <TextField fx:id="playInputs" onAction="#getPlayInputs" prefHeight="27.0" prefWidth="231.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                      <Button fx:id="drawButton" mnemonicParsing="false" onAction="#drawButtonPress" prefHeight="35.0" prefWidth="71.0" text="Draw" />
-                      <Button fx:id="skipButton" mnemonicParsing="false" onAction="#skipButtonPress" prefHeight="35.0" prefWidth="78.0" text="Skip" />
+                      <Button mnemonicParsing="false" onAction="#drawButtonPress" prefHeight="35.0" prefWidth="71.0" text="Draw" />
+                      <Button mnemonicParsing="false" onAction="#skipButtonPress" prefHeight="35.0" prefWidth="78.0" text="Skip" />
                </children>
             </HBox>
          </children>

@@ -46,17 +46,18 @@ public class GameManager {
         if(!console) {
             boneyard = new Boneyard(guiCenterNum);
             imageStack = new ArrayList<>();
-            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
-                String s = "Round " + round + " is over.";
-                getScore();
-                s += "\nScores:\n";
-                for(Player p : players){
-                    s += p.getPlayerNum() + ": " + p.getScore();
-                }
-                updateLabel(s);
-                roundOver = true;
-                startNewRound();
-            }
+//            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
+//                System.out.println(boneyard.boneyard);
+//                String s = "Round " + round + " is over.";
+//                getScore();
+//                s += "\nScores:\n";
+//                for(Player p : players){
+//                    s += p.getPlayerNum() + ": " + p.getScore();
+//                }
+//                updateLabel(s);
+//                roundOver = true;
+//                startNewRound();
+//            }
             if(round > 10) {
                 updateLabel("Game Over! \n" + getWinner().getPlayerNum() +" is the winner!");
             }

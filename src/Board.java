@@ -72,6 +72,8 @@ public class Board {
             System.out.println(p.getPlayerNum());
         }
         System.out.println(playerTurnInc);
+        System.out.println(players);
+
         players.get(playerTurnInc).makePlayerTurn();
         players.get(playerTurnInc).makeHasDrawnFalse();
         if(playerTurnInc == (players.size() - 1)) {
