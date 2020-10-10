@@ -39,15 +39,25 @@ public class Controller {
     @FXML
     private HBox center = new HBox();
     @FXML
-    private VBox p1 = new VBox();
+    private VBox p1Box1 = new VBox();
     @FXML
-    private VBox p2 = new VBox();
+    private VBox p1Box2 = new VBox();
     @FXML
-    private HBox p3 = new HBox();
+    private VBox p2Box1 = new VBox();
     @FXML
-    private HBox p4 = new HBox();
+    private VBox p2Box2 = new VBox();
     @FXML
-    private HBox mexTrain = new HBox();
+    private HBox p3Box1 = new HBox();
+    @FXML
+    private HBox p3Box2 = new HBox();
+    @FXML
+    private HBox p4Box1 = new HBox();
+    @FXML
+    private HBox p4Box2 = new HBox();
+    @FXML
+    private HBox mexTrain1 = new HBox();
+    @FXML
+    private HBox mexTrain2 = new HBox();
     @FXML
     private Button comPlayerButton = new Button();
     @FXML
@@ -100,8 +110,9 @@ public class Controller {
         gm.updateComponents(currentPlayerLbl, currentPlayerLbl1, playerHand);
 //        gm.updateBoard(center, p1, p2, p3, p4, mexTrain,
 //                p1Label, p2Label, p3Label, p4Label, mexTrainLabel, gameStateLabel);
-        gm.updateBoard(center, p1, p2, p3, p4, mexTrain,
-                p1Label, p2Label, p3Label, p4Label, mexTrainLabel, gameStateLabel);
+        gm.updateBoard(center, p1Box1, p1Box2, p2Box1, p2Box2, p3Box1, p3Box2, p4Box1, p4Box2,
+                mexTrain1, mexTrain2, p1Label, p2Label, p3Label, p4Label,
+                mexTrainLabel, gameStateLabel);
     }
 
     /**

@@ -27,6 +27,7 @@ public class GameManager {
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private ArrayList<ImageView> imageStack;
     private boolean printAllPlayersHands = true;
+    private boolean domRotated = false;
     private boolean roundOver = false;
     private boolean changeTurn = true;
     private boolean console;
@@ -458,6 +459,7 @@ public class GameManager {
                 if(checkIfDomMatches(lastMexDom, playDom)) {
                     if(checkRotation(lastMexDom, playDom)) {
                         playDom.rotateDom();
+                        domRotated = true;
                     }
                     mexTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -477,6 +479,7 @@ public class GameManager {
                 if(checkIfDomMatches(lastDom, playDom)) {
                     if(checkRotation(lastDom, playDom)) {
                         playDom.rotateDom();
+                        domRotated = true;
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -515,6 +518,7 @@ public class GameManager {
             if(checkIfDomMatches(lastMexDom, playDom)) {
                 if(checkRotation(lastMexDom, playDom)) {
                     playDom.rotateDom();
+                    domRotated = true;
                 }
                 mexTrain.addDomToTrain(playDom);
                 currentPlayer.removeDomFromHand(playDom);
@@ -548,6 +552,7 @@ public class GameManager {
                 if(checkIfDomMatches(lastDom, playDom)) {
                     if(checkRotation(lastDom, playDom)) {
                         playDom.rotateDom();
+                        domRotated = true;
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
@@ -989,11 +994,16 @@ public class GameManager {
     /**
      * Updates the board part of the GUI.
      * @param center : HBox of center domino
-     * @param p1 : VBox of player 1 train
-     * @param p2 : HBox of player 2 train
-     * @param p3 : VBox of player 3 train
-     * @param p4 : VBox of player 4 train
-     * @param mexTrainBox : HBox of Mexican Train
+     * @param p1Box1 : first VBox of player 1 train
+     * @param p1Box2 : second VBox of player 1 train
+     * @param p2Box1 : first VBox of player 2 train
+     * @param p2Box1 : second VBox of player 2 train
+     * @param p3Box1 : first HBox of player 3 train
+     * @param p3Box2 : second HBox of player 3 train
+     * @param p4Box1 : first HBox of player 4 train
+     * @param p4Box2 : second HBox of player 4 train
+     * @param mexTrainBox1 : first HBox of Mexican Train
+     * @param mexTrainBox2 : second HBox of Mexican Train
      * @param p1Label : label of player 1 train
      * @param p2Label : label of player 2 train
      * @param p3Label : label of player 3 train
@@ -1001,24 +1011,25 @@ public class GameManager {
      * @param mexTrainLabel : label of Mexican Train
      * @param gameStateLabel : label of game state
      */
-    public void updateBoard(HBox center, VBox p1, VBox p2, HBox p3, HBox p4,
-                            HBox mexTrainBox, Label p1Label, Label p2Label, Label p3Label,
+    public void updateBoard(HBox center, VBox p1Box1, VBox p1Box2, VBox p2Box1, VBox p2Box2,
+                            HBox p3Box1, HBox p3Box2, HBox p4Box1, HBox p4Box2,
+                            HBox mexTrainBox1, HBox mexTrainBox2, Label p1Label, Label p2Label, Label p3Label,
                             Label p4Label, Label mexTrainLabel, Label gameStateLabel) {
         updateCenter(center);
-        updateMexTrain(mexTrainBox, mexTrain, mexTrainLabel);
+        updateMexTrain(mexTrainBox1, mexTrainBox2, mexTrain, mexTrainLabel);
         //updates trains depending on the number of players that there is
         if(totalPlayers == 2) {
-            updateTrain1(p1, players.get(0), p1Label);
-            updateTrain2(p2, players.get(1), p2Label);
+            updateTrain1(p1Box1, p1Box2, players.get(0), p1Label);
+            updateTrain2(p2Box1, p2Box2, players.get(1), p2Label);
         } else if(totalPlayers == 3) {
-            updateTrain1(p1, players.get(0), p1Label);
-            updateTrain2(p2, players.get(1), p2Label);
-            updateTrain3(p3, players.get(2), p3Label);
+            updateTrain1(p1Box1, p1Box2, players.get(0), p1Label);
+            updateTrain2(p2Box1, p2Box2, players.get(1), p2Label);
+            updateTrain3(p3Box1, p3Box2, players.get(2), p3Label);
         } else if(totalPlayers == 4) {
-            updateTrain1(p1, players.get(0), p1Label);
-            updateTrain2(p2, players.get(1), p2Label);
-            updateTrain3(p3, players.get(2), p3Label);
-            updateTrain4(p4, players.get(3), p4Label);
+            updateTrain1(p1Box1, p1Box2, players.get(0), p1Label);
+            updateTrain2(p2Box1, p2Box2, players.get(1), p2Label);
+            updateTrain3(p3Box1, p3Box2, players.get(2), p3Label);
+            updateTrain4(p4Box1, p4Box2, players.get(3), p4Label);
         }
         gameStateLabel.setText(getLabel());
         //clears game state updates
@@ -1041,110 +1052,255 @@ public class GameManager {
      * Updates player one train.
      * It gets the images of the dominoes from the train
      * and adds them to the VBox.
-     * @param p1 : VBox of player 1 train
+     * @param p11 : first VBox of player 1 train
+     * @param p12 : second VBox of player 1 train
      * @param player1 : first player
      * @param p1Label : label of player 1 train
      */
-    public void updateTrain1(VBox p1, Player player1, Label p1Label) {
-        p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p1.getChildren().clear();
-        for(int i = 1; i < player1.getTrainSize(); ++i) {
-            ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player1.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate()+270);
-            currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
+    public void updateTrain1(VBox p11, VBox p12, Player player1, Label p1Label) {
+        int rotation = 270;
+        if(domRotated) {
+            rotation = rotation + 180;
         }
-        p1.getChildren().addAll(imageStack);
+        p11.getChildren().clear();
+        p12.getChildren().clear();
+        p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        //used to make the train form two parallel rows
+        for (int i = 1; i < player1.getTrainSize(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(player1.getTrainDomino(i));
+            }
+            else {
+                temp1.add(player1.getTrainDomino(i));
+            }
+        }
+        ArrayList<ImageView> imageStack1 = new ArrayList<>();
+        ArrayList<ImageView> imageStack2 = new ArrayList<>();
+
+        for(int i = 0; i < temp1.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp1.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + rotation);
+            currentImageView.setImage(currentDominoImage);
+            imageStack1.add(currentImageView);
+        }
+
+        for(int i = 0; i < temp2.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp2.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 270);
+            currentImageView.setImage(currentDominoImage);
+            imageStack2.add(currentImageView);
+        }
+        p11.getChildren().addAll(imageStack1);
+        p12.getChildren().addAll(imageStack2);
+        domRotated = false;
     }
 
     /**
      * Updates player two train.
      * It gets the images of the dominoes from the train
      * and adds them to the HBox.
-     * @param p2 : VBox of player 2 train
+     * @param p21 : first VBox of player 2 train
+     * @param p22 : second VBox of player 2 train
      * @param player2 : second player
      * @param p2Label : label of player 2 train
      */
-    public void updateTrain2(VBox p2, Player player2, Label p2Label) {
+    public void updateTrain2(VBox p21, VBox p22, Player player2, Label p2Label) {
+        int rotation = 270;
+        if(domRotated) {
+            rotation = rotation + 180;
+        }
+        p21.getChildren().clear();
+        p22.getChildren().clear();
         p2Label.setText(player2.getPlayerNum() + " Train" + "(" + player2.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p2.getChildren().clear();
-        for(int i = 1; i < player2.getTrainSize(); ++i) {
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        //used to make the train form two parallel rows
+        for (int i = 1; i < player2.getTrainSize(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(player2.getTrainDomino(i));
+            }
+            else {
+                temp1.add(player2.getTrainDomino(i));
+            }
+        }
+        ArrayList<ImageView> imageStack1 = new ArrayList<>();
+        ArrayList<ImageView> imageStack2 = new ArrayList<>();
+
+        for(int i = 0; i < temp1.size(); i++) {
             ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player2.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            Image currentDominoImage = new Image(temp1.get(i).getDomImage(),domWidth,domHeight,true,true);
             currentImageView.setRotate(currentImageView.getRotate() + 270);
             currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
+            imageStack1.add(currentImageView);
         }
-        p2.getChildren().addAll(imageStack);
+
+        for(int i = 0; i < temp2.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp2.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 270);
+            currentImageView.setImage(currentDominoImage);
+            imageStack2.add(currentImageView);
+        }
+        p21.getChildren().addAll(imageStack1);
+        p22.getChildren().addAll(imageStack2);
+        domRotated = false;
     }
 
     /**
      * Updates player three train.
      * It gets the images of the dominoes from the train
      * and adds them to the VBox.
-     * @param p3 : HBox of player 3 train
+     * @param p31 : first HBox of player 3 train
+     * @param p32 : second HBox of player 3 train
      * @param player3 : third player
      * @param p3Label : label of player 3 train
      */
-    public void updateTrain3(HBox p3, Player player3, Label p3Label) {
+    public void updateTrain3(HBox p31, HBox p32, Player player3, Label p3Label) {
+        int rotation = 180;
+        if(domRotated) {
+            rotation = rotation + 180;
+        }
+        p31.getChildren().clear();
+        p32.getChildren().clear();
         p3Label.setText(player3.getPlayerNum() + " Train" + "(" + player3.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p3.getChildren().clear();
-        for(int i = 1; i < player3.getTrainSize(); ++i) {
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        //used to make the train form two parallel rows
+        for (int i = 1; i < player3.getTrainSize(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(player3.getTrainDomino(i));
+            }
+            else {
+                temp1.add(player3.getTrainDomino(i));
+            }
+        }
+        ArrayList<ImageView> imageStack1 = new ArrayList<>();
+        ArrayList<ImageView> imageStack2 = new ArrayList<>();
+
+        for(int i = 0; i < temp1.size(); i++) {
             ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player3.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            Image currentDominoImage = new Image(temp1.get(i).getDomImage(),domWidth,domHeight,true,true);
             currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
+            imageStack1.add(currentImageView);
         }
-        p3.getChildren().addAll(imageStack);
+
+        for(int i = 0; i < temp2.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp2.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
+            currentImageView.setImage(currentDominoImage);
+            imageStack2.add(currentImageView);
+        }
+        p31.getChildren().addAll(imageStack1);
+        p32.getChildren().addAll(imageStack2);
+        domRotated = false;
     }
 
     /**
      * Updates player four train.
      * It gets the images of the dominoes from the train
      * and adds them to the VBox.
-     * @param p4 : HBox of player 4 train
+     * @param p41 : first HBox of player 4 train
+     * @param p42 : second HBox of player 4 train
      * @param player4 : fourth player
      * @param p4Label : label of player 4 train
      */
-    public void updateTrain4(HBox p4, Player player4, Label p4Label) {
+    public void updateTrain4(HBox p41, HBox p42, Player player4, Label p4Label) {
+        int rotation = 180;
+        if(domRotated) {
+            rotation = rotation + 180;
+        }
+        p41.getChildren().clear();
+        p42.getChildren().clear();
         p4Label.setText(player4.getPlayerNum() + " Train" + "(" + player4.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        p4.getChildren().clear();
-        for(int i = 1; i < player4.getTrainSize(); ++i) {
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        //used to make the train form two parallel rows
+        for (int i = 1; i < player4.getTrainSize(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(player4.getTrainDomino(i));
+            }
+            else {
+                temp1.add(player4.getTrainDomino(i));
+            }
+        }
+        ArrayList<ImageView> imageStack1 = new ArrayList<>();
+        ArrayList<ImageView> imageStack2 = new ArrayList<>();
+
+        for(int i = 0; i < temp1.size(); i++) {
             ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(player4.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            Image currentDominoImage = new Image(temp1.get(i).getDomImage(),domWidth,domHeight,true,true);
             currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
+            imageStack1.add(currentImageView);
         }
-        p4.getChildren().addAll(imageStack);
+
+        for(int i = 0; i < temp2.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp2.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
+            currentImageView.setImage(currentDominoImage);
+            imageStack2.add(currentImageView);
+        }
+        p41.getChildren().addAll(imageStack1);
+        p42.getChildren().addAll(imageStack2);
+        domRotated = false;
     }
 
     /**
      * Updates the Mexican Train in the GUI.
      * It gets the images of the dominoes from the Mexican
-     * Train and adds them to the HBox.
-     * @param mexTrainBox : HBox of the Mexican Train
+     * Train and adds them to the HBoxes.
+     * @param mexTrainBox1 : first HBox of the Mexican Train
+     * @param mexTrainBox2 : second HBox of the Mexican Train
      * @param mexTrain : Mexican Train player
      * @param mexTrainLabel : Mexican Train label
      */
-    public void updateMexTrain(HBox mexTrainBox, Player mexTrain, Label mexTrainLabel) {
+    public void updateMexTrain(HBox mexTrainBox1, HBox mexTrainBox2, Player mexTrain, Label mexTrainLabel) {
+        int rotation = 180;
+        if(domRotated) {
+            rotation = rotation + 180;
+        }
+        mexTrainBox1.getChildren().clear();
+        mexTrainBox2.getChildren().clear();
         mexTrainLabel.setText(mexTrain.getPlayerNum() + "(" + mexTrain.getTrainState() + ")");
-        ArrayList<ImageView> imageStack = new ArrayList<>();
-        mexTrainBox.getChildren().clear();
-        for(int i = 1; i < mexTrain.getTrainSize(); ++i) {
+        ArrayList<Domino> temp1 = new ArrayList<>();
+        ArrayList<Domino> temp2 = new ArrayList<>();
+        //used to make the train form two parallel rows
+        for (int i = 1; i < mexTrain.getTrainSize(); i++){
+            if ((i + 2) % 2 == 0) {
+                temp2.add(mexTrain.getTrainDomino(i));
+            }
+            else {
+                temp1.add(mexTrain.getTrainDomino(i));
+            }
+        }
+        ArrayList<ImageView> imageStack1 = new ArrayList<>();
+        ArrayList<ImageView> imageStack2 = new ArrayList<>();
+
+        for(int i = 0; i < temp1.size(); i++) {
             ImageView currentImageView = new ImageView();
-            Image currentDominoImage = new Image(mexTrain.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
+            Image currentDominoImage = new Image(temp1.get(i).getDomImage(),domWidth,domHeight,true,true);
             currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
-            imageStack.add(currentImageView);
+            imageStack1.add(currentImageView);
         }
-        mexTrainBox.getChildren().addAll(imageStack);
+
+        for(int i = 0; i < temp2.size(); i++) {
+            ImageView currentImageView = new ImageView();
+            Image currentDominoImage = new Image(temp2.get(i).getDomImage(),domWidth,domHeight,true,true);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
+            currentImageView.setImage(currentDominoImage);
+            imageStack2.add(currentImageView);
+        }
+        mexTrainBox1.getChildren().addAll(imageStack1);
+        mexTrainBox2.getChildren().addAll(imageStack2);
+        domRotated = false;
     }
 
     /**

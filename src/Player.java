@@ -259,4 +259,5 @@ public class Player {
      * @return last domino from train
      */
     public Domino getLastTrainDom() { return train.get(train.size()-1); }
+
 }

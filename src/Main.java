@@ -23,8 +23,8 @@ public class Main extends Application {
      * @param args : any arguments
      */
     public static void main(String[] args) {
-        values.makeConsoleTrue();
-        //values.makeConsoleFalse();
+        //values.makeConsoleTrue();
+        values.makeConsoleFalse();
         if(values.checkIfConsole()) {
             new GameManager();
         } else {
