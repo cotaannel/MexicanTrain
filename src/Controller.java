@@ -1,10 +1,15 @@
 /**
  * @author Annel Cota
  *
- * This class has
+ * This Controller class starts the GameManager for the GUI
+ * version with the values from the setup GUI.
+ * It has all the components of the GUI that make up the game
+ * board, including the player trains, draw and skip button,
+ * and all the labels.
  */
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -36,13 +41,15 @@ public class Controller {
     @FXML
     private VBox p1 = new VBox();
     @FXML
-    private HBox p2 = new HBox();
+    private VBox p2 = new VBox();
     @FXML
-    private VBox p3 = new VBox();
+    private HBox p3 = new HBox();
     @FXML
-    private VBox p4 = new VBox();
+    private HBox p4 = new HBox();
     @FXML
     private HBox mexTrain = new HBox();
+    @FXML
+    private Button comPlayerButton = new Button();
     @FXML
     private TextField playInputs;
     private Values values;
@@ -51,6 +58,9 @@ public class Controller {
     private int humanPlayers;
     private int computerPlayers;
 
+    /**
+     * Gets the values from Main's Values.
+     */
     public Controller() {
         values = Main.getValues();
         totPlayers = values.returnTotalPlayers();
@@ -58,10 +68,27 @@ public class Controller {
         computerPlayers = values.returnComPlayers();
     }
 
+    /**
+     * Creates a GameManager and starts the game
+     * with the values of the players.
+     * It then updates the components of the GUI.
+     */
     @FXML
     private void initialize() {
         gm = new GameManager();
         gm.startGame(totPlayers,humanPlayers,computerPlayers);
+        updateGM();
+    }
+
+    /**
+     * If the comPlayerButton is clicked, this method
+     * is called. It is a computer player's turn, so
+     * the start turn method is called so the computer
+     * player can make its move. It then updates the GUI.
+     */
+    @FXML
+    private void getComPlayGUI() {
+        gm.startTurn();
         updateGM();
     }
 
@@ -71,6 +98,8 @@ public class Controller {
     @FXML
     private void updateGM() {
         gm.updateComponents(currentPlayerLbl, currentPlayerLbl1, playerHand);
+//        gm.updateBoard(center, p1, p2, p3, p4, mexTrain,
+//                p1Label, p2Label, p3Label, p4Label, mexTrainLabel, gameStateLabel);
         gm.updateBoard(center, p1, p2, p3, p4, mexTrain,
                 p1Label, p2Label, p3Label, p4Label, mexTrainLabel, gameStateLabel);
     }

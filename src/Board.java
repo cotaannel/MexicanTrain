@@ -66,14 +66,9 @@ public class Board {
      * after another.
      */
     public void changePlayerTurn() {
-        System.out.println("Board chnage player turn");
         for(Player p : players){
             p.makePlayerTurnFalse();
-            System.out.println(p.getPlayerNum());
         }
-        System.out.println(playerTurnInc);
-        System.out.println(players);
-
         players.get(playerTurnInc).makePlayerTurn();
         players.get(playerTurnInc).makeHasDrawnFalse();
         if(playerTurnInc == (players.size() - 1)) {

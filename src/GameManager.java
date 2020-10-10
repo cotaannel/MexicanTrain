@@ -1,7 +1,9 @@
 /**
  * @author Annel Cota
  *
- * This class
+ * GameManager class creates the boneyard, the board, and the list
+ * of players. This class handles all of the gameplay and logic of
+ * the game.
  */
 
 import javafx.scene.control.Label;
@@ -21,6 +23,7 @@ public class GameManager {
     private Player currentPlayer = new Player();
     private Player mexTrain = new Player();
     private ArrayList<Player> players = new ArrayList<>();
+    //holds the player's scores for each round
     private ArrayList<Integer> scoreHolder = new ArrayList<>();
     private ArrayList<ImageView> imageStack;
     private boolean printAllPlayersHands = true;
@@ -37,12 +40,12 @@ public class GameManager {
     private int guiCenterNum = 9;
     private final int domWidth = 40;
     private final int domHeight = 21;
+    //label that gets updated and prints game state updates to GUI
     private String label = " ";
 
     public GameManager() {
         Values values = Main.getValues();
         this.console = values.checkIfConsole();
-
         if(!console) {
             boneyard = new Boneyard(guiCenterNum);
             imageStack = new ArrayList<>();
@@ -67,7 +70,7 @@ public class GameManager {
             while(!gameOver) {
                 startTurn();
 
-                if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
+                if((boneyard.boneyard.isEmpty() && checkIfNoMorePlays()) || checkIfPlayersHandEmpty()) {
                     System.out.println("Round " + round + " is over.");
                     getScore();
                     System.out.println("Scores:");
@@ -110,7 +113,7 @@ public class GameManager {
     }
 
     /**
-     *
+     * Gets the players score and updates the score.
      */
     public void getScore() {
         int i = 0;
@@ -176,16 +179,18 @@ public class GameManager {
     }
 
     /**
-     *
+     * Checks if a player can draw by checking if there are
+     * any playable spots for the player and whether or not they
+     * have drawn during their turn already.
      */
     public void checkIfCanDraw() {
-        //if there is a playable domino, cannot draw
         //checking if there are playable plays for when there is a double open
         if(checkIfDoubleOpen() && !currentPlayer.checkIfCanPlayNonDoubleTrain()){
             if(checkPlayableSpotsOpenDouble(currentPlayer)) {
                 String s = "Cannot draw, there is a playable domino.";
                 if(console) {
                     System.out.println(s);
+
                 } else {
                     updateLabel(s);
                 }
@@ -211,6 +216,7 @@ public class GameManager {
                 }
             }
         } else {
+            //checks if there are playable plays for current players
             if(checkPlayableSpots(currentPlayer)) {
                 if(console) {
                     System.out.println("Cannot draw, there is a playable domino.");
@@ -236,19 +242,23 @@ public class GameManager {
         }
     }
 
+    /**
+     * Checks if a player can skip by making sure the player
+     * can make no more plays and if they have already drawn first.
+     */
     public void checkIfCanSkip() {
-        //have to fix, if double played, and cannot make another play, cannot skip until drawn
         if(checkPlayableSpots(currentPlayer)) {
             //if there are playable spots, can't skip
             String s = "Cannot skip, there is a playable domino.";
             if(console) {
                 System.out.println(s);
+                System.out.println(currentPlayer.getPlayerNum());
+                System.out.println(checkIfDoubleOpen());
             } else {
                 updateLabel(s);
             }
         } else if(!currentPlayer.checkIfDrawn()) {
             //if there aren't playable spots, but hasn't drawn yet, can't skip
-            //has to draw first
             if(console) {
                 System.out.println("Cannot skip, first draw and try to play again.");
             } else {
@@ -256,13 +266,50 @@ public class GameManager {
             }
         } else {
             //no playable spots & has drawn
-            //makes current player's train true
             if(console) {
                 System.out.println(currentPlayer.getPlayerNum() + " has skipped.");
             } else {
                 updateLabel(currentPlayer.getPlayerNum() + " has skipped.");
             }
             board.changePlayerTurn();
+            //makes current player's train true since they were unable to play
+            currentPlayer.makeStateTrue();
+            if(console) { printGameState(); }
+        }
+    }
+
+    /**
+     * Checks if a player can skip when there is double open
+     * by making sure the player has no plays for when there is
+     * an open double and if they have drawn first.
+     */
+    public void checkIfCanSkipDoubleOpen() {
+        if(checkPlayableSpotsOpenDouble(currentPlayer)) {
+            //if there are playable spots, can't skip
+            String s = "Cannot skip, there is a playable domino.";
+            if(console) {
+                System.out.println(s);
+                System.out.println(currentPlayer.getPlayerNum());
+                System.out.println(checkIfDoubleOpen());
+            } else {
+                updateLabel(s);
+            }
+        } else if(!currentPlayer.checkIfDrawn()) {
+            //if there aren't playable spots, but hasn't drawn yet, can't skip
+            if(console) {
+                System.out.println("Cannot skip, first draw and try to play again.");
+            } else {
+                updateLabel("Cannot skip, first draw and try to play again.");
+            }
+        } else {
+            //no playable spots & has drawn
+            if(console) {
+                System.out.println(currentPlayer.getPlayerNum() + " has skipped.");
+            } else {
+                updateLabel(currentPlayer.getPlayerNum() + " has skipped.");
+            }
+            board.changePlayerTurn();
+            //makes current player's train true
             currentPlayer.makeStateTrue();
             if(console) { printGameState(); }
         }
@@ -283,15 +330,17 @@ public class GameManager {
     }
 
     /**
-     *
-     * @param currentPlayer
-     * @return
+     * Checks if any of the dominoes in the current player's
+     * hand can go on any playable train or on the Mexican Train.
+     * It returns true if it does have a play.
+     * @param currentPlayer : the current player
+     * @return if there are playable spots or not
      */
     public boolean checkPlayableSpots(Player currentPlayer) {
         //goes through each dom in players hand
         for(int i = 0; i < currentPlayer.getHandSize(); i++) {
             Domino dom = currentPlayer.getDomino(i);
-            //check if dom can go on a playable train
+            //check if domino can go on a playable train
             for(Player p : players){
                 if(p.getTrainState() || p.getPlayerTurn()) {
                     Domino lastDom = p.getLastTrainDom();
@@ -309,6 +358,13 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Checks if any of the dominoes in the current player's
+     * hand can go on the train with the open double.
+     * It returns true if they do have a play.
+     * @param currentPlayer : the current player
+     * @return if there is a play for the open double or not
+     */
     public boolean checkPlayableSpotsOpenDouble(Player currentPlayer) {
         Player doubleTrain = getOpenDoubleTrain();
         for(int i = 0; i < currentPlayer.getHandSize(); i++) {
@@ -321,6 +377,12 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * This method is called when player tries to play.
+     * Gets the domino and train choice from the player.
+     * If it's a computer player, it call's a method to
+     * get the computers play choices.
+     */
     public void playDominoSetup() {
         int domChoice = 0;
         int trainChoice = 0;
@@ -332,10 +394,20 @@ public class GameManager {
             trainChoice = in.nextInt();
             playDominoSetupChoices(domChoice,trainChoice);
         } else {
-            getComPlay();
+            if(checkIfDoubleOpen()) {
+                getComPlayDouble();
+            } else {
+                getComPlay();
+            }
         }
     }
 
+    /**
+     * Sends the domino and train choices to a method
+     * to check if they are legal plays.
+     * @param domChoice : the domino that player chose
+     * @param trainChoice : the train that player chose
+     */
     public void playDominoSetupChoices(int domChoice, int trainChoice) {
         Domino playDom = currentPlayer.getDomino(domChoice-1);
         Player playTrain;
@@ -354,6 +426,13 @@ public class GameManager {
             }
         }
     }
+
+    /**
+     * Gets the choices for the computer player and sends
+     * them to check if they are legal moves.
+     * @param playDom : play domino choice of computer player
+     * @param playTrain : play train choice of computer player
+     */
     public void playDominoSetupChoicesComputer(Domino playDom, Player playTrain) {
         if(!checkIfDoubleOpen()) {
             checkIfLegal(playDom, playTrain);
@@ -366,6 +445,11 @@ public class GameManager {
         }
     }
 
+    /**
+     *
+     * @param playDom
+     * @param playTrain
+     */
     public void checkIfLegalDoubleOpen(Domino playDom, Player playTrain) {
         Player trainDouble = getOpenDoubleTrain();
         if(playTrain == trainDouble) {
@@ -396,7 +480,9 @@ public class GameManager {
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
-                    currentPlayer.makeStateFalse();
+                    if(playTrain == currentPlayer) {
+                        currentPlayer.makeStateFalse();
+                    }
                     changeTurn = true;
                 } else {
                     if(console) {
@@ -465,7 +551,9 @@ public class GameManager {
                     }
                     playTrain.addDomToTrain(playDom);
                     currentPlayer.removeDomFromHand(playDom);
-                    currentPlayer.makeStateFalse();
+                    if(playTrain == currentPlayer) {
+                        currentPlayer.makeStateFalse();
+                    }
                     changeTurn = true;
                     if(currentPlayer.checkIfCanPlayNonDoubleTrain()) {
                         currentPlayer.makeFalseCanPlayNonDoubleTrain();
@@ -504,19 +592,28 @@ public class GameManager {
         if(console) { printGameState(); }
     }
 
+    /**
+     * Checks if the domino matches the domino it is being played to.
+     * @param lastDom : domino that is getting compared to play domino
+     * @param playDom : domino being played
+     * @return whether or not the dominoes match
+     */
     public boolean checkIfDomMatches(Domino lastDom, Domino playDom) {
         return (lastDom.getRightNum() == playDom.getLeftNum()) ||
                 (lastDom.getRightNum() == playDom.getRightNum());
     }
 
+    /**
+     * Check if the domino need to be rotated.
+     * @param lastDom : domino that is on the board
+     * @param playDom : domino that is being played on the board
+     * @return whether or not the domino needs to be rotated
+     */
     public boolean checkRotation(Domino lastDom, Domino playDom) {
         return lastDom.getRightNum() != playDom.getLeftNum();
     }
 
     public void startGame(int totalPlayers, int numHumanPlayers, int numComPlayers) {
-        this.totalPlayers = totalPlayers;
-        this.numHumanPlayers = numHumanPlayers;
-        this.numComPlayers = numComPlayers;
         if(console) {
             Scanner in = new Scanner(System.in);
             System.out.println("Welcome to Mexican Train!");
@@ -577,16 +674,26 @@ public class GameManager {
             players.add(p);
             scoreHolder.add(0);
         }
+        this.totalPlayers = totalPlayers;
+        this.numHumanPlayers = numHumanPlayers;
+        this.numComPlayers = numComPlayers;
         board = new Board(players, centerNum,boneyard);
         mexTrain = board.getMexTrain();
-
         getPlayerTurn();
         if(console) { printGameState(); }
     }
 
+    /**
+     * Decrements the center number by one.
+     */
     public void decrementCenterNum() { centerNum--; }
 
+    /**
+     * Starts a new round, which creates a new boneyard and
+     * deals the players new hands.
+     */
     public void startNewRound() {
+        decrementCenterNum();
         boneyard = new Boneyard(centerNum);
         players = new ArrayList<>();
         round++;
@@ -601,15 +708,28 @@ public class GameManager {
             p.setComputer();
             players.add(p);
         }
-        decrementCenterNum();
+        System.out.println(players);
         board = new Board(players, centerNum,boneyard);
         mexTrain = board.getMexTrain();
         printGameState();
         roundOver = false;
     }
 
+    /**
+     * Checks if a domino is a double by comparing both the
+     * left and right pip number.
+     * @param dom : domino being checked
+     * @return whether the domino is a double or not
+     */
     public boolean checkIfDomDouble(Domino dom) { return dom.getLeftNum() == dom.getRightNum(); }
 
+    /**
+     * Prints out the game state of the game.
+     * This includes the round number, all of the players,
+     * the player's hands, and the boneyard. It also prints
+     * the board which consists of the center domino, the
+     * Mexican Train, and the other player's trains.
+     */
     public void printGameState() {
         getPlayerTurn();
         System.out.println("Round " + round);
@@ -679,10 +799,17 @@ public class GameManager {
         System.out.println("------------------------------------");
     }
 
+    /**
+     * Starts current players turn.
+     * It asks whether they want to play, skip, or draw
+     * and gets their decisions from the users input.
+     * If it is a computer player, a check is made to see
+     * what they can do, either play, skip, or draw.
+     */
     public void startTurn() {
         getPlayerTurn();
+        String playerOption;
         if(console) {
-            String playerOption;
             if(!currentPlayer.checkIfComputer()) {
                 System.out.println(currentPlayer.getPlayerNum() + "'s Turn");
                 System.out.println("[p] play domino");
@@ -697,23 +824,37 @@ public class GameManager {
                     playerOption = getComputerMoveDouble();
                 }
             }
-            switch (playerOption) {
-                case "p":
-                    playDominoSetup();
-                    break;
-                case "d":
-                    checkIfCanDraw();
-                    break;
-                case "s":
-                    checkIfCanSkip();
-                    break;
-                case "q":
-                    exit(0);
+        } else {
+            if(!checkIfDoubleOpen()) {
+                playerOption = getComputerMove();
+            } else {
+                playerOption = getComputerMoveDouble();
             }
         }
-
+        switch (playerOption) {
+            case "p":
+                playDominoSetup();
+                break;
+            case "d":
+                checkIfCanDraw();
+                break;
+            case "s":
+                if(!checkIfDoubleOpen() || currentPlayer.checkIfCanPlayNonDoubleTrain()) {
+                    checkIfCanSkip();
+                } else if(checkIfDoubleOpen()) {
+                    checkIfCanSkipDoubleOpen();
+                }
+                break;
+            case "q":
+                exit(0);
+        }
     }
 
+    /**
+     * Gets the computer player's by checking if there are any playable spots.
+     * If there aren't the computer player will then draw or skip.
+     * @return computer player move
+     */
     public String getComputerMove() {
         if(checkPlayableSpots(currentPlayer)) {
             return "p";
@@ -726,6 +867,12 @@ public class GameManager {
         }
     }
 
+    /**
+     * Gets the computer player's move when there is an
+     * open double by checking if there are any playable spots.
+     * If there aren't the computer player will then draw or skip.
+     * @return computer player move
+     */
     public String getComputerMoveDouble() {
         if(checkPlayableSpotsOpenDouble(currentPlayer)) {
             return "p";
@@ -738,8 +885,10 @@ public class GameManager {
         }
     }
 
-    //checks to see which domino matches computers train and which of those
-    //that match have the highest points
+    /**
+     * Checks to see which dominoes can match any of the playable trains
+     * and gets the domino with the highest score.
+     */
     public void getComPlay() {
         //if(!checkIfDoubleOpen()) {
             System.out.println("getcomplay");
@@ -771,29 +920,34 @@ public class GameManager {
 //        }
     }
 
-    //checks to see which domino matches double open train and which of those
-    //that match have the highest points
-//    public void getComPlayDouble() {
-//        Player player = getOpenDoubleTrain();
-//        ArrayList<Domino> tempMatches = new ArrayList<>();
-//        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
-//            Domino dom = currentPlayer.getDomino(i);
-//            if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-//                tempMatches.add(dom);
-//            }
-//        }
-//        Domino dom = getMaxScoreDom(tempMatches);
-//        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-//            if(checkRotation(player.getLastTrainDom(), dom)) {
-//                dom.rotateDom();
-//            }
-//            player.addDomToTrain(dom);
-//            board.changePlayerTurn();
-//            currentPlayer.removeRandomDomFromHand(dom);
-//            printGameState();
-//        }
-//    }
+    /**
+     * Checks to see which dominoes matches the open double train
+     * and gets the domino with the highest score.
+     */
+    public void getComPlayDouble() {
+        Player player = getOpenDoubleTrain();
+        ArrayList<Domino> tempMatches = new ArrayList<>();
+        ArrayList<Player> tempTrainMatches = new ArrayList<>();
+        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
+            Domino dom = currentPlayer.getDomino(i);
+            if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                tempMatches.add(dom);
+                tempTrainMatches.add(player);
+            }
+        }
+        Random rand = new Random();
+        Player randomInt = tempTrainMatches.get(rand.nextInt(tempTrainMatches.size()));
+        System.out.print(tempTrainMatches);
+        Domino dom = getMaxScoreDom(tempMatches);
+        playDominoSetupChoicesComputer(dom, randomInt);
+    }
 
+    /**
+     * Gets the domino from the possible playable dominoes
+     * list and returns the domino with the highest points.
+     * @param temp : list of possible playable dominoes
+     * @return domino with highest score
+     */
     public Domino getMaxScoreDom(ArrayList temp) {
         System.out.println(temp);
         ArrayList<Integer> scoreTemp = new ArrayList<>();
@@ -819,7 +973,12 @@ public class GameManager {
         return (Domino) temp.get(indexOfTemp);
     }
 
-    ////////////////GUI PART
+    /**
+     * Updates the components of the GUI.
+     * @param currentPlayerLbl : label of current player
+     * @param currentPlayerLbl1 : label of current player's hand
+     * @param playerHand : HBox of player's hand
+     */
     public void updateComponents(Label currentPlayerLbl, Label currentPlayerLbl1, HBox playerHand) {
         getPlayerTurn();
         currentPlayerLbl.setText("Current Player: " + currentPlayer.getPlayerNum());
@@ -827,11 +986,27 @@ public class GameManager {
         updatePlayerHand(playerHand);
     }
 
-    public void updateBoard(HBox center, VBox p1, HBox p2, VBox p3, VBox p4,
+    /**
+     * Updates the board part of the GUI.
+     * @param center : HBox of center domino
+     * @param p1 : VBox of player 1 train
+     * @param p2 : HBox of player 2 train
+     * @param p3 : VBox of player 3 train
+     * @param p4 : VBox of player 4 train
+     * @param mexTrainBox : HBox of Mexican Train
+     * @param p1Label : label of player 1 train
+     * @param p2Label : label of player 2 train
+     * @param p3Label : label of player 3 train
+     * @param p4Label : label of player 4 train
+     * @param mexTrainLabel : label of Mexican Train
+     * @param gameStateLabel : label of game state
+     */
+    public void updateBoard(HBox center, VBox p1, VBox p2, HBox p3, HBox p4,
                             HBox mexTrainBox, Label p1Label, Label p2Label, Label p3Label,
                             Label p4Label, Label mexTrainLabel, Label gameStateLabel) {
         updateCenter(center);
         updateMexTrain(mexTrainBox, mexTrain, mexTrainLabel);
+        //updates trains depending on the number of players that there is
         if(totalPlayers == 2) {
             updateTrain1(p1, players.get(0), p1Label);
             updateTrain2(p2, players.get(1), p2Label);
@@ -846,87 +1021,149 @@ public class GameManager {
             updateTrain4(p4, players.get(3), p4Label);
         }
         gameStateLabel.setText(getLabel());
+        //clears game state updates
         label = " ";
     }
+
+    /**
+     * Updates the label of the game state that is in the GUI.
+     * @param s : game state label
+     */
     public void updateLabel(String s) { label = s; }
 
+    /**
+     * Gets the label of the game state that is in the GUI.
+     * @return game state label
+     */
     public String getLabel() { return label; }
 
+    /**
+     * Updates player one train.
+     * It gets the images of the dominoes from the train
+     * and adds them to the VBox.
+     * @param p1 : VBox of player 1 train
+     * @param player1 : first player
+     * @param p1Label : label of player 1 train
+     */
     public void updateTrain1(VBox p1, Player player1, Label p1Label) {
         p1Label.setText(player1.getPlayerNum() + " Train" + "(" + player1.getTrainState() + ")");
         ArrayList<ImageView> imageStack = new ArrayList<>();
         p1.getChildren().clear();
-        for(int i = 0; i < player1.getTrainSize(); ++i) {
+        for(int i = 1; i < player1.getTrainSize(); ++i) {
             ImageView currentImageView = new ImageView();
             Image currentDominoImage = new Image(player1.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate()+90);
+            currentImageView.setRotate(currentImageView.getRotate()+270);
             currentImageView.setImage(currentDominoImage);
             imageStack.add(currentImageView);
         }
         p1.getChildren().addAll(imageStack);
     }
-    public void updateTrain2(HBox p2, Player player2, Label p2Label) {
+
+    /**
+     * Updates player two train.
+     * It gets the images of the dominoes from the train
+     * and adds them to the HBox.
+     * @param p2 : VBox of player 2 train
+     * @param player2 : second player
+     * @param p2Label : label of player 2 train
+     */
+    public void updateTrain2(VBox p2, Player player2, Label p2Label) {
         p2Label.setText(player2.getPlayerNum() + " Train" + "(" + player2.getTrainState() + ")");
         ArrayList<ImageView> imageStack = new ArrayList<>();
         p2.getChildren().clear();
-        for(int i = 0; i < player2.getTrainSize(); ++i) {
+        for(int i = 1; i < player2.getTrainSize(); ++i) {
             ImageView currentImageView = new ImageView();
             Image currentDominoImage = new Image(player2.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate());
+            currentImageView.setRotate(currentImageView.getRotate() + 270);
             currentImageView.setImage(currentDominoImage);
             imageStack.add(currentImageView);
         }
         p2.getChildren().addAll(imageStack);
     }
-    public void updateTrain3(VBox p3, Player player3, Label p3Label) {
+
+    /**
+     * Updates player three train.
+     * It gets the images of the dominoes from the train
+     * and adds them to the VBox.
+     * @param p3 : HBox of player 3 train
+     * @param player3 : third player
+     * @param p3Label : label of player 3 train
+     */
+    public void updateTrain3(HBox p3, Player player3, Label p3Label) {
         p3Label.setText(player3.getPlayerNum() + " Train" + "(" + player3.getTrainState() + ")");
         ArrayList<ImageView> imageStack = new ArrayList<>();
         p3.getChildren().clear();
-        for(int i = 0; i < player3.getTrainSize(); ++i) {
+        for(int i = 1; i < player3.getTrainSize(); ++i) {
             ImageView currentImageView = new ImageView();
             Image currentDominoImage = new Image(player3.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 180);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
             imageStack.add(currentImageView);
         }
         p3.getChildren().addAll(imageStack);
     }
-    public void updateTrain4(VBox p4, Player player4, Label p4Label) {
+
+    /**
+     * Updates player four train.
+     * It gets the images of the dominoes from the train
+     * and adds them to the VBox.
+     * @param p4 : HBox of player 4 train
+     * @param player4 : fourth player
+     * @param p4Label : label of player 4 train
+     */
+    public void updateTrain4(HBox p4, Player player4, Label p4Label) {
         p4Label.setText(player4.getPlayerNum() + " Train" + "(" + player4.getTrainState() + ")");
         ArrayList<ImageView> imageStack = new ArrayList<>();
         p4.getChildren().clear();
-        for(int i = 0; i < player4.getTrainSize(); ++i) {
+        for(int i = 1; i < player4.getTrainSize(); ++i) {
             ImageView currentImageView = new ImageView();
             Image currentDominoImage = new Image(player4.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate() + 270);// + 74.1);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
             imageStack.add(currentImageView);
         }
         p4.getChildren().addAll(imageStack);
     }
+
+    /**
+     * Updates the Mexican Train in the GUI.
+     * It gets the images of the dominoes from the Mexican
+     * Train and adds them to the HBox.
+     * @param mexTrainBox : HBox of the Mexican Train
+     * @param mexTrain : Mexican Train player
+     * @param mexTrainLabel : Mexican Train label
+     */
     public void updateMexTrain(HBox mexTrainBox, Player mexTrain, Label mexTrainLabel) {
         mexTrainLabel.setText(mexTrain.getPlayerNum() + "(" + mexTrain.getTrainState() + ")");
         ArrayList<ImageView> imageStack = new ArrayList<>();
         mexTrainBox.getChildren().clear();
-        for(int i = 0; i < mexTrain.getTrainSize(); ++i) {
+        for(int i = 1; i < mexTrain.getTrainSize(); ++i) {
             ImageView currentImageView = new ImageView();
             Image currentDominoImage = new Image(mexTrain.getTrainDomino(i).getDomImage(),domWidth,domHeight,true,true);
-            currentImageView.setRotate(currentImageView.getRotate());// + 118);
+            currentImageView.setRotate(currentImageView.getRotate() + 180);
             currentImageView.setImage(currentDominoImage);
             imageStack.add(currentImageView);
         }
         mexTrainBox.getChildren().addAll(imageStack);
     }
 
+    /**
+     * Updates the center domino in the HBox on the GUI.
+     * @param center : HBox of center domino
+     */
     public void updateCenter(HBox center) {
         center.getChildren().clear();
         ImageView currentImageView = new ImageView();
         Image currentDominoImage = new Image(board.getCenter().getDomImage(),60,40,true,true);
         currentImageView.setImage(currentDominoImage);
         center.getChildren().addAll(currentImageView);
-
     }
 
+    /**
+     * Updates the dominoes in the HBox of the players hand
+     * that is in the GUI.
+     * @param playerHands : HBox of player's hand
+     */
     public void updatePlayerHand(HBox playerHands) {
         playerHands.getChildren().clear();
         imageStack.clear();

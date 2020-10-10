@@ -11,22 +11,19 @@
 <AnchorPane prefHeight="801.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <children>
         <HBox fx:id="center" layoutX="490.0" layoutY="386.0" prefHeight="40.0" prefWidth="60.0" />
-        <HBox fx:id="playerHand" layoutX="516.0" layoutY="750.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="552.0" />
-        <HBox fx:id="p2" alignment="TOP_RIGHT" layoutX="422.0" layoutY="389.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="60.0" />
-        <HBox fx:id="mexTrain" layoutX="554.0" layoutY="391.0" prefHeight="35.0" prefWidth="543.0" />
-        <Label fx:id="mexTrainLabel" layoutX="619.0" layoutY="343.0" prefHeight="34.0" prefWidth="124.0" />
-        <Label fx:id="p1Label" layoutX="544.0" layoutY="504.0" prefHeight="34.0" prefWidth="131.0" />
-        <Label fx:id="p2Label" layoutX="274.0" layoutY="347.0" prefHeight="34.0" prefWidth="121.0" />
-        <Label fx:id="p3Label" layoutX="349.0" layoutY="156.0" prefHeight="34.0" prefWidth="121.0" />
-        <Label fx:id="p4Label" layoutX="580.0" layoutY="153.0" prefHeight="34.0" prefWidth="121.0" />
+        <HBox fx:id="playerHand" layoutX="516.0" layoutY="750.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="552.0" spacing="3.0" />
+        <HBox fx:id="mexTrain" layoutX="549.0" layoutY="391.0" prefHeight="35.0" prefWidth="548.0" />
+        <Label fx:id="mexTrainLabel" layoutX="620.0" layoutY="358.0" prefHeight="34.0" prefWidth="124.0" />
+        <Label fx:id="p1Label" layoutX="517.0" layoutY="506.0" prefHeight="34.0" prefWidth="131.0" />
+        <Label fx:id="p2Label" layoutX="247.0" layoutY="360.0" prefHeight="34.0" prefWidth="148.0" />
+        <Label fx:id="p3Label" layoutX="341.0" layoutY="153.0" prefHeight="34.0" prefWidth="140.0" />
+        <Label fx:id="p4Label" layoutX="563.0" layoutY="153.0" prefHeight="34.0" prefWidth="161.0" />
         <VBox fx:id="p1" alignment="TOP_CENTER" layoutX="481.0" layoutY="427.0" prefHeight="405.0" prefWidth="35.0" spacing="10.0" />
-        <VBox fx:id="p3" alignment="BOTTOM_CENTER" layoutX="483.0" layoutY="14.0" prefHeight="369.0" prefWidth="35.0" spacing="10.0" />
-        <VBox fx:id="p4" alignment="BOTTOM_CENTER" layoutX="522.0" layoutY="2.0" prefHeight="381.0" prefWidth="35.0" spacing="10.0" />
         <Label fx:id="gameStateLabel" layoutX="4.0" layoutY="673.0" prefHeight="116.0" prefWidth="473.0" textAlignment="CENTER" textFill="RED">
          <font>
             <Font size="22.0" />
          </font></Label>
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="886.0" layoutY="15.0" text="*NOTE*&#10;*(false) = train closed*&#10;*(true) = train open*&#10;*Mexican Train = 0*&#10;*Player1 Train = 1*&#10;so on..." textAlignment="CENTER">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="886.0" layoutY="15.0" text="*NOTE*&#10;*(false) = train closed*&#10;*(true) = train open*&#10;*Mexican Train = 0*&#10;*Player1 Train = 1*&#10;*Player2 Train = 2*&#10;*Player3 Train = 3*&#10;*Player4 Train = 4*" textAlignment="CENTER">
             <font>
                 <Font size="21.0" />
             </font>
@@ -66,5 +63,14 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <VBox fx:id="p2" alignment="TOP_CENTER" layoutX="266.0" layoutY="206.0" prefHeight="405.0" prefWidth="35.0" rotate="90.0" spacing="10.0" />
+      <HBox fx:id="p4" layoutX="347.0" layoutY="172.0" prefHeight="35.0" prefWidth="394.0" rotate="-90.0" />
+      <HBox fx:id="p3" layoutX="302.0" layoutY="173.0" prefHeight="35.0" prefWidth="394.0" rotate="-90.0" />
+      <Label alignment="CENTER" layoutX="718.0" layoutY="458.0" prefHeight="69.0" prefWidth="308.0" text="If Current Player is a Computer Player,&#10;Please click button below." textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="comPlayerButton" layoutX="843.0" layoutY="537.0" mnemonicParsing="false" onAction="#getComPlayGUI" text="Click Here!" />
     </children>
 </AnchorPane>

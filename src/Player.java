@@ -1,7 +1,10 @@
 /**
  * @author Annel Cota
  *
- * This class has
+ * Player class creates a player with hand, train,
+ * and a name/number. It keeps track of its train,
+ * whether it has drawn, whether it is a computer player,
+ * and it also prints the player's hand.
  */
 
 import java.util.ArrayList;
@@ -14,10 +17,17 @@ public class Player {
     private boolean isComputer = false;
     private boolean hasDrawn = false;
     private boolean playerTurn = false;
+    //play on train other than one with double if player played the double
     private boolean canPlayNonDoubleTrain = false;
     private int startingDomNum;
     private int score = 0;
 
+    /**
+     * Creates player with a hand and a train.
+     * Sets the player's name/number.
+     * @param playerNum : player's name/number
+     * @param i : number of starting dominoes for player's hand
+     */
     public Player(String playerNum, int i) {
         this.playerNum = playerNum;
         hand = new ArrayList<>();
@@ -25,6 +35,9 @@ public class Player {
         startingDomNum = i;
     }
 
+    /**
+     * Creates player with a hand and train.
+     */
     public Player() {
         hand = new ArrayList<>();
         train = new ArrayList<>();
