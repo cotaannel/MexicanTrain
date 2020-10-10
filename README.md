@@ -22,6 +22,8 @@ player makes a move to show the updated version of the game state and the board.
 The JavaFX version of the game is playable through a GUI. The center domino is shown
 on the center of the GUI and the player's trains go off of the center piece in 
 different directions.
+* NOTE: The player's hand dominoes are numbered from left to right. So the farthest left
+domino would be Domino #1 
 
 ###Game Setup
 For the console version, there can be up to eight players. If you want to have
