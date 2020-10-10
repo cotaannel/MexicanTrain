@@ -24,9 +24,9 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         //uncomment below line for console version
-        values.makeConsoleTrue();
+        //values.makeConsoleTrue();
         //uncomment below line for GUI
-        //values.makeConsoleFalse();
+        values.makeConsoleFalse();
         if(values.checkIfConsole()) {
             new GameManager();
         } else {

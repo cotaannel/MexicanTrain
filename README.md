@@ -1,4 +1,3 @@
-NOT DONE yet
 
 #Mexican Train
 *Author: Annel Cota*
