@@ -18,7 +18,7 @@
         <Label fx:id="p2Label" layoutX="247.0" layoutY="360.0" prefHeight="34.0" prefWidth="148.0" />
         <Label fx:id="p3Label" layoutX="290.0" layoutY="44.0" prefHeight="34.0" prefWidth="140.0" />
         <Label fx:id="p4Label" layoutX="638.0" layoutY="129.0" prefHeight="34.0" prefWidth="161.0" />
-        <VBox fx:id="p1Box1" alignment="TOP_CENTER" layoutX="481.0" layoutY="427.0" prefHeight="405.0" prefWidth="35.0" spacing="10.0" />
+        <VBox fx:id="p1Box1" alignment="TOP_CENTER" layoutX="481.0" layoutY="427.0" prefHeight="405.0" prefWidth="35.0" spacing="12.0" />
         <Label fx:id="gameStateLabel" layoutX="4.0" layoutY="673.0" prefHeight="116.0" prefWidth="444.0" textAlignment="CENTER" textFill="RED">
          <font>
             <Font size="22.0" />
@@ -63,7 +63,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <VBox fx:id="p2Box1" alignment="TOP_CENTER" layoutX="266.0" layoutY="206.0" prefHeight="405.0" prefWidth="35.0" rotate="90.0" spacing="10.0" />
+      <VBox fx:id="p2Box1" alignment="TOP_CENTER" layoutX="266.0" layoutY="206.0" prefHeight="405.0" prefWidth="35.0" rotate="90.0" spacing="12.0" />
       <HBox fx:id="p4Box1" layoutX="341.0" layoutY="177.0" prefHeight="35.0" prefWidth="394.0" rotate="-90.0" />
       <HBox fx:id="p3Box1" layoutX="302.0" layoutY="177.0" prefHeight="35.0" prefWidth="391.0" rotate="-90.0" />
       <Label alignment="CENTER" layoutX="718.0" layoutY="458.0" prefHeight="69.0" prefWidth="308.0" text="If Current Player is a Computer Player,&#10;Please click button below." textAlignment="CENTER">
@@ -73,8 +73,8 @@
       </Label>
       <Button fx:id="comPlayerButton" layoutX="843.0" layoutY="537.0" mnemonicParsing="false" onAction="#getComPlayGUI" text="Click Here!" />
       <HBox fx:id="mexTrain2" layoutX="565.0" layoutY="410.0" prefHeight="35.0" prefWidth="518.0" />
-      <VBox fx:id="p1Box2" alignment="TOP_CENTER" layoutX="464.0" layoutY="445.0" prefHeight="394.0" prefWidth="35.0" spacing="10.0" />
-      <VBox fx:id="p2Box2" alignment="TOP_CENTER" layoutX="251.0" layoutY="224.0" prefHeight="405.0" prefWidth="35.0" rotate="90.0" spacing="10.0" />
+      <VBox fx:id="p1Box2" alignment="TOP_CENTER" layoutX="464.0" layoutY="445.0" prefHeight="394.0" prefWidth="35.0" spacing="12.0" />
+      <VBox fx:id="p2Box2" alignment="TOP_CENTER" layoutX="251.0" layoutY="224.0" prefHeight="405.0" prefWidth="35.0" rotate="90.0" spacing="12.0" />
       <HBox fx:id="p3Box2" layoutX="284.0" layoutY="158.0" prefHeight="35.0" prefWidth="391.0" rotate="-90.0" />
       <HBox fx:id="p4Box2" layoutX="359.0" layoutY="161.0" prefHeight="35.0" prefWidth="394.0" rotate="-90.0" />
     </children>

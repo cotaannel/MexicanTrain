@@ -108,8 +108,6 @@ public class Controller {
     @FXML
     private void updateGM() {
         gm.updateComponents(currentPlayerLbl, currentPlayerLbl1, playerHand);
-//        gm.updateBoard(center, p1, p2, p3, p4, mexTrain,
-//                p1Label, p2Label, p3Label, p4Label, mexTrainLabel, gameStateLabel);
         gm.updateBoard(center, p1Box1, p1Box2, p2Box1, p2Box2, p3Box1, p3Box2, p4Box1, p4Box2,
                 mexTrain1, mexTrain2, p1Label, p2Label, p3Label, p4Label,
                 mexTrainLabel, gameStateLabel);

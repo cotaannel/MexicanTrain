@@ -42,5 +42,8 @@ set printAllPlayersHands to true.
 * In the JavaFX Version, sometimes when players add dominoes to the train, the domino
 does not rotate to correctly match the pip it is supposed to match. This does not change
 the logic though, the correct pip will be used to compare to the next playable domino.
+* The computer player logic doesn't work perfectly. Which is what causes the below bug.
 * In the console version, sometimes after the computer player plays, an infinite
 print loop happens. If using no computer players, this bug doesn't occur.
+* A good way to look at what the computer plays is to use the JavaFX version and
+use four computer players.

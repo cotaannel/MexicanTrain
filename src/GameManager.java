@@ -44,6 +44,12 @@ public class GameManager {
     //label that gets updated and prints game state updates to GUI
     private String label = " ";
 
+    /**
+     * This method starts the game, starts a new turn, and keeps
+     * track of when a round is over. When a round is over,
+     * it prints out the scores. Once the max rounds have been played,
+     * the game is over and it gives the winner of the game.
+     */
     public GameManager() {
         Values values = Main.getValues();
         this.console = values.checkIfConsole();
@@ -205,7 +211,7 @@ public class GameManager {
                     } else {
                         updateLabel("Domino was drawn.");
                     }
-                    printGameState();
+                    if(console) { printGameState();}
 
                     startTurn();
                 } else {
@@ -229,8 +235,12 @@ public class GameManager {
                 if(!currentPlayer.checkIfDrawn()) {
                     currentPlayer.addDomToHand(boneyard.drawDom());
                     currentPlayer.makeHasDrawnTrue();
-                    if(console) { System.out.println("Domino was drawn."); }
-                    printGameState();
+                    if(console) {
+                        System.out.println("Domino was drawn.");
+                        printGameState();
+                    } else {
+                        updateLabel("Domino was drawn");
+                    }
                     startTurn();
                 } else {
                     if(console) {
@@ -447,9 +457,10 @@ public class GameManager {
     }
 
     /**
-     *
-     * @param playDom
-     * @param playTrain
+     * Checks if the domino and train selected are a legal play
+     * for when there is a double open.
+     * @param playDom : domino that is being played
+     * @param playTrain : train that domino is being played on
      */
     public void checkIfLegalDoubleOpen(Domino playDom, Player playTrain) {
         Player trainDouble = getOpenDoubleTrain();
@@ -512,6 +523,11 @@ public class GameManager {
         if(console) { printGameState(); }
     }
 
+    /**
+     * Checks if the domino and train selected are a legal play.
+     * @param playDom : domino that is being played
+     * @param playTrain : train that domino is being played on
+     */
     public void checkIfLegal(Domino playDom, Player playTrain) {
         if(playTrain == mexTrain) {
             Domino lastMexDom = mexTrain.getLastTrainDom();
@@ -618,6 +634,15 @@ public class GameManager {
         return lastDom.getRightNum() != playDom.getLeftNum();
     }
 
+    /**
+     * Starts a new game. If it is a console game, asks user for input for
+     * the total players and so on. If GUI version, those values are brought
+     * in when the method is called. The players are then dealt their hands,
+     * the board is created, and the players start their turn.
+     * @param totalPlayers : total number of players
+     * @param numHumanPlayers : total number of human players
+     * @param numComPlayers : total number of computer players
+     */
     public void startGame(int totalPlayers, int numHumanPlayers, int numComPlayers) {
         if(console) {
             Scanner in = new Scanner(System.in);
@@ -713,10 +738,9 @@ public class GameManager {
             p.setComputer();
             players.add(p);
         }
-        System.out.println(players);
         board = new Board(players, centerNum,boneyard);
         mexTrain = board.getMexTrain();
-        printGameState();
+        if(console) { printGameState(); }
         roundOver = false;
     }
 
@@ -895,8 +919,6 @@ public class GameManager {
      * and gets the domino with the highest score.
      */
     public void getComPlay() {
-        //if(!checkIfDoubleOpen()) {
-            System.out.println("getcomplay");
             ArrayList<Domino> tempMatches = new ArrayList<>();
             ArrayList<Player> tempTrainMatches = new ArrayList<>();
             for(int i = 0; i < currentPlayer.getHandSize(); i++) {
@@ -917,12 +939,8 @@ public class GameManager {
             }
             Random rand = new Random();
             Player randomInt = tempTrainMatches.get(rand.nextInt(tempTrainMatches.size()));
-            System.out.print(tempTrainMatches);
             Domino dom = getMaxScoreDom(tempMatches);
             playDominoSetupChoicesComputer(dom, randomInt);
-//        } else {
-//            getComPlayDouble();
-//        }
     }
 
     /**
