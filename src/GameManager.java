@@ -56,18 +56,6 @@ public class GameManager {
         if(!console) {
             boneyard = new Boneyard(guiCenterNum);
             imageStack = new ArrayList<>();
-//            if(boneyard.boneyard.isEmpty() || checkIfNoMorePlays() || checkIfPlayersHandEmpty()) {
-//                System.out.println(boneyard.boneyard);
-//                String s = "Round " + round + " is over.";
-//                getScore();
-//                s += "\nScores:\n";
-//                for(Player p : players){
-//                    s += p.getPlayerNum() + ": " + p.getScore();
-//                }
-//                updateLabel(s);
-//                roundOver = true;
-//                startNewRound();
-//            }
             if(round > 10) {
                 updateLabel("Game Over! \n" + getWinner().getPlayerNum() +" is the winner!");
             }
@@ -77,16 +65,8 @@ public class GameManager {
             while(!gameOver) {
                 startTurn();
 
-                if((boneyard.boneyard.isEmpty() && checkIfNoMorePlays()) || checkIfPlayersHandEmpty()) {
-                    System.out.println("Round " + round + " is over.");
-                    getScore();
-                    System.out.println("Scores:");
-                    for(Player p : players){
-                        System.out.println(p.getPlayerNum() + ": " + p.getScore());
-                    }
-                    System.out.println();
-                    roundOver = true;
-                    startNewRound();
+                if(checkIfRoundOver()) {
+                    whenRoundIsOver();
                 }
                 if(centerNum == 12) {
                     if(round > 13) {
@@ -103,6 +83,45 @@ public class GameManager {
             System.out.println(getWinner().getPlayerNum() + " is the winner!");
             in.close();
         }
+    }
+
+    /**
+     * When the round is over, prints scores and starts new round.
+     */
+    public void whenRoundIsOver() {
+        if(console) {
+            System.out.println("Round " + round + " is over.");
+            getScore();
+            System.out.println("Scores:");
+            for(Player p : players){
+                System.out.println(p.getPlayerNum() + ": " + p.getScore());
+            }
+            System.out.println();
+        } else {
+            String s = "Round " + round + " is over.";
+            getScore();
+            s += "\nScores:\n";
+            for(Player p : players){
+                s += p.getPlayerNum() + ": " + p.getScore();
+            }
+            updateLabel(s);
+        }
+        roundOver = true;
+        startNewRound();
+    }
+
+
+    /**
+     * Checks to see if the round is over. The round is over when
+     * the boneyard is empty and there are no more plays or
+     * when a player empties their hand.
+     * @return whether or not the round is over
+     */
+    public boolean checkIfRoundOver() {
+        if((boneyard.boneyard.isEmpty() && checkIfNoMorePlays()) || checkIfPlayersHandEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -263,8 +282,6 @@ public class GameManager {
             String s = "Cannot skip, there is a playable domino.";
             if(console) {
                 System.out.println(s);
-                System.out.println(currentPlayer.getPlayerNum());
-                System.out.println(checkIfDoubleOpen());
             } else {
                 updateLabel(s);
             }
@@ -300,8 +317,6 @@ public class GameManager {
             String s = "Cannot skip, there is a playable domino.";
             if(console) {
                 System.out.println(s);
-                System.out.println(currentPlayer.getPlayerNum());
-                System.out.println(checkIfDoubleOpen());
             } else {
                 updateLabel(s);
             }
@@ -919,28 +934,37 @@ public class GameManager {
      * and gets the domino with the highest score.
      */
     public void getComPlay() {
-            ArrayList<Domino> tempMatches = new ArrayList<>();
-            ArrayList<Player> tempTrainMatches = new ArrayList<>();
-            for(int i = 0; i < currentPlayer.getHandSize(); i++) {
-                Domino dom = currentPlayer.getDomino(i);
-                if(checkIfDomMatches(mexTrain.getLastTrainDom(), dom)) {
-                    tempMatches.add(dom);
-                    tempTrainMatches.add(mexTrain);
+        ArrayList<Domino> tempMatches = new ArrayList<>();
+        ArrayList<Player> tempTrainMatches = new ArrayList<>();
+        for(int i = 0; i < currentPlayer.getHandSize(); i++) {
+            Domino dom = currentPlayer.getDomino(i);
+            if(checkIfDomMatches(mexTrain.getLastTrainDom(), dom)) {
+                tempMatches.add(dom);
+                tempTrainMatches.add(mexTrain);
 
-                }
-                for(Player player : players) {
-                    if(player.getTrainState() || player == currentPlayer) {
-                        if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
-                            tempMatches.add(dom);
-                            tempTrainMatches.add(player);
-                        }
+            }
+            for(Player player : players) {
+                if(player.getTrainState() || player == currentPlayer) {
+                    if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                        tempMatches.add(dom);
+                        tempTrainMatches.add(player);
                     }
                 }
             }
-            Random rand = new Random();
-            Player randomInt = tempTrainMatches.get(rand.nextInt(tempTrainMatches.size()));
-            Domino dom = getMaxScoreDom(tempMatches);
-            playDominoSetupChoicesComputer(dom, randomInt);
+        }
+        Domino dom = getMaxScoreDom(tempMatches);
+        Player playTrain = new Player();
+
+        for(Player player : tempTrainMatches) {
+            if(player.getTrainState() || player == currentPlayer) {
+                if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
+                    playTrain = player;
+                    break;
+                }
+            }
+        }
+        playDominoSetupChoicesComputer(dom, playTrain);
+
     }
 
     /**
@@ -955,14 +979,10 @@ public class GameManager {
             Domino dom = currentPlayer.getDomino(i);
             if(checkIfDomMatches(player.getLastTrainDom(), dom)) {
                 tempMatches.add(dom);
-                tempTrainMatches.add(player);
             }
         }
-        Random rand = new Random();
-        Player randomInt = tempTrainMatches.get(rand.nextInt(tempTrainMatches.size()));
-        System.out.print(tempTrainMatches);
         Domino dom = getMaxScoreDom(tempMatches);
-        playDominoSetupChoicesComputer(dom, randomInt);
+        playDominoSetupChoicesComputer(dom, player);
     }
 
     /**

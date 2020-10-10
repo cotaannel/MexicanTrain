@@ -37,13 +37,24 @@ For both versions, there can be any combo of human players and computer players.
 * The game is set to only print the player's hand when it is their turn, if it 
 is more than one human player.(console version) To print all the player's hands,
 set printAllPlayersHands to true.
+* In Main, you can make Values change console to true or false depending on the version
+you are trying to run.
 
-##Bugs and Comments
+##Bugs, Comments, Unfinished things
 * In the JavaFX Version, sometimes when players add dominoes to the train, the domino
 does not rotate to correctly match the pip it is supposed to match. This does not change
-the logic though, the correct pip will be used to compare to the next playable domino.
+the logic though, the correct pip will be used to compare to the next playable domino. It 
+gets confusing when you are playing because you might be trying to add a domino to the
+wrong pip since it doesn't rotate right.
 * The computer player logic doesn't work perfectly. Which is what causes the below bug.
 * In the console version, sometimes after the computer player plays, an infinite
 print loop happens. If using no computer players, this bug doesn't occur.
 * A good way to look at what the computer plays is to use the JavaFX version and
 use four computer players.
+* The round changing works for the console version but not for the GUI one.
+* In the console version, when printing out the players choices (play, draw, skip), it prints 
+it out twice but it is only supposed to print it out once. Doesn't mess up anything
+just doesnt print out the way I want it to.
+
+* Best way to test console version would be to use all players, since the computer logic has
+a bug. Testing computer on the GUI version works a bit better.
