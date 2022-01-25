@@ -1,6 +1,10 @@
 
 #Mexican Train
 *Author: Annel Cota*
+
+#Note
+This visual aspect of the GUI is not appealing. I was trying to fulfill extra credit requirements, which meant sacrifing the looks of the game.
+
 ##Description
 This is a domino game that is played with a double-9 set or double-12 set
 of dominoes. Each player has a train they can play on that has to match the 
